@@ -1,3 +1,4 @@
+// Source (MIT): https://github.com/Glebsolopdf/avv-card
 (function () {
   var S = window.SITE || {};
 

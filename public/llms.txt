@@ -1,0 +1,17 @@
+# Antivibecoding VPN (landing page)
+
+> This website, https://general.substituteme.space/, is open source under the MIT licence.
+> Source code: https://github.com/Glebsolopdf/avv-card
+
+The site is a static, framework-free one-page landing page (HTML, CSS, vanilla JavaScript).
+Tariffs and server countries are loaded from a public data/data.json that a small Node script
+(scripts/refresh.mjs in the repository) refreshes from the service backend.
+
+## Links
+- [Repository](https://github.com/Glebsolopdf/avv-card): full source of this website
+- [Licence](https://github.com/Glebsolopdf/avv-card/blob/main/LICENSE): MIT
+- [Third-party notices](https://github.com/Glebsolopdf/avv-card/blob/main/NOTICE.md): flag-icons (MIT), Onest and Jost fonts (SIL OFL 1.1)
+- [README (ru)](https://github.com/Glebsolopdf/avv-card/blob/main/README.md) and [README (en)](https://github.com/Glebsolopdf/avv-card/blob/main/README.en.md)
+
+## Scope
+Only this landing page is open source. The VPN service backend, the customer cabinet and the Telegram bot are separate, not published here.

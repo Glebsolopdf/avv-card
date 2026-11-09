@@ -1,0 +1,8 @@
+/* TEAM */
+Project: Antivibecoding VPN
+Source code: https://github.com/Glebsolopdf/avv-card
+
+/* SITE */
+Licence: MIT (https://github.com/Glebsolopdf/avv-card/blob/main/LICENSE)
+Standards: HTML5, CSS3, vanilla JavaScript, no framework
+Third-party: flag-icons (MIT), Onest and Jost fonts (SIL OFL 1.1)
