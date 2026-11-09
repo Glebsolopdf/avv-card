@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const base = process.env.CORE_CLIENT_URL;
 const tokenFile = process.env.CORE_CLIENT_TOKEN_FILE;
-const out = process.env.CARD_DATA_OUT || fileURLToPath(new URL('./data.json', import.meta.url));
+const out = process.env.CARD_DATA_OUT || fileURLToPath(new URL('../public/data/data.json', import.meta.url));
 if (!base || !tokenFile) {
   console.error('CORE_CLIENT_URL and CORE_CLIENT_TOKEN_FILE are required');
   process.exit(2);

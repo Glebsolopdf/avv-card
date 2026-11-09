@@ -33,15 +33,21 @@
 ## Структура
 
 ```
-index.html     разметка и мета-теги (Open Graph, Twitter Card)
-style.css      стили и тёмная тема
-app.js         анимации, рендер тарифов и стран, переключатель темы
-content.js     ссылки (кабинет, бот) и запасные данные на случай, пока нет data.json
-data.json      публичные данные: тарифы и коды стран (в репозитории пример с "sample": true)
-refresh.mjs    обновляет data.json из API бэкенда (Node 18+, без зависимостей)
-flags/         флаги стран (flag-icons, см. NOTICE.md)
-fonts/         Onest и Jost, woff2 (кириллица и латиница)
-licenses/      полные тексты лицензий третьих сторон
+public/                      корень сайта: его и отдаёт веб-сервер
+├── index.html               разметка и мета-теги (Open Graph, Twitter Card)
+├── css/style.css            стили и тёмная тема
+├── js/
+│   ├── app.js               анимации, рендер тарифов и стран, переключатель темы
+│   └── content.js           ссылки (кабинет, бот) и запасные данные, пока нет data.json
+├── data/data.json           публичные данные: тарифы и коды стран (пример с "sample": true)
+└── assets/
+    ├── fonts/               Onest и Jost, woff2 (кириллица и латиница)
+    ├── flags/               флаги стран (flag-icons, см. NOTICE.md)
+    └── img/                 og.png и favicon.svg
+scripts/refresh.mjs          обновляет data.json из API бэкенда (Node 18+, без зависимостей)
+docs/                        превью для README
+licenses/                    полные тексты лицензий третьих сторон
+LICENSE · NOTICE.md          лицензия проекта и уведомления о сторонних компонентах
 ```
 
 ## Запуск
@@ -49,11 +55,11 @@ licenses/      полные тексты лицензий третьих сто�
 Сборки нет, достаточно любого статического сервера:
 
 ```bash
-python3 -m http.server 8080
+python3 -m http.server 8080 -d public
 # открыть http://localhost:8080
 ```
 
-Подстройте под себя `content.js`: ссылку на кабинет (`cabinetUrl`), бота (`botUrl`), ключ «самого популярного» тарифа (`popularKey`).
+Подстройте под себя `public/js/content.js`: ссылку на кабинет (`cabinetUrl`), бота (`botUrl`), ключ «самого популярного» тарифа (`popularKey`).
 
 ## Откуда берутся данные
 
@@ -75,8 +81,8 @@ python3 -m http.server 8080
 ```bash
 CORE_CLIENT_URL=http://127.0.0.1:9546 \
 CORE_CLIENT_TOKEN_FILE=/path/to/read-only.token \
-CARD_DATA_OUT=./data.json \
-node refresh.mjs
+CARD_DATA_OUT=./public/data/data.json \
+node scripts/refresh.mjs
 ```
 
 Что делает скрипт для безопасности:
@@ -93,15 +99,15 @@ node refresh.mjs
 
 Любой статический хостинг или nginx. Что стоит настроить:
 
-- `Cache-Control: public, max-age=31536000, immutable` для `fonts/`, `flags/` и ассетов с `?v=`; короткий кеш для `index.html` и `data.json`;
+- `Cache-Control: public, max-age=31536000, immutable` для `assets/` и файлов с `?v=` (`css/`, `js/`); короткий кеш для `index.html` и `data.json`;
 - gzip или brotli для `text/css`, `application/javascript`, `image/svg+xml` и `application/json`;
 - HTTPS и заголовки `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`;
 - желательна Content-Security-Policy (в `index.html` есть один inline-скрипт выбора темы, ему нужен хэш).
 
-При изменении `app.js`, `style.css` или `content.js` поднимайте `?v=` в `index.html`.
+При изменении `js/app.js`, `css/style.css` или `js/content.js` поднимайте `?v=` в `index.html`. Веб-серверу отдавайте папку `public/`.
 
 ## Лицензии
 
 Код проекта: [MIT](LICENSE). Флаги ([flag-icons](https://github.com/lipis/flag-icons), MIT) и шрифты ([Onest](https://github.com/googlefonts/onest) и [Jost](https://github.com/indestructible-type/Jost), SIL OFL 1.1) распространяются на условиях их авторов: подробности и полные тексты в [NOTICE.md](NOTICE.md) и папке [`licenses/`](licenses/).
 
-Название и бренд Antivibecoding VPN, адреса сервиса и бота в `content.js` принадлежат проекту: при форке замените их своими.
+Название и бренд Antivibecoding VPN, адреса сервиса и бота в `public/js/content.js` принадлежат проекту: при форке замените их своими.

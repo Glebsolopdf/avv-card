@@ -25,36 +25,50 @@ No bundler and no framework: HTML, one CSS file, one JS file and a little data.
 - **Live data** from `data.json`, refreshed by `refresh.mjs`; the visitor's browser never talks to the backend.
 - **Safe by default**: data text goes through `textContent`, links are built through the DOM, and `refresh.mjs` validates the response and keeps the previous file on anything unexpected.
 
+## Layout
+
+```
+public/                      site root: this is what the web server serves
+├── index.html
+├── css/style.css
+├── js/app.js, js/content.js
+├── data/data.json           public tariffs and country codes (sample data here)
+└── assets/{fonts,flags,img}
+scripts/refresh.mjs          rebuilds data.json from the backend API (Node 18+)
+docs/                        README previews
+licenses/                    full third-party licence texts
+```
+
 ## Run
 
 No build step, any static server works:
 
 ```bash
-python3 -m http.server 8080
+python3 -m http.server 8080 -d public
 ```
 
-Edit `content.js` for your links (`cabinetUrl`, `botUrl`) and the `popularKey` tariff.
+Edit `public/js/content.js` for your links (`cabinetUrl`, `botUrl`) and the `popularKey` tariff.
 
 ## Data
 
 `data.json` holds the public tariff terms and country codes (the sample in this repo has `"sample": true`).
-`refresh.mjs` (Node 18+, no dependencies) rebuilds it from your backend's `GET /client/v1/tariffs` and `GET /client/v1/servers`:
+`scripts/refresh.mjs` (Node 18+, no dependencies) rebuilds it from your backend's `GET /client/v1/tariffs` and `GET /client/v1/servers`:
 
 ```bash
 CORE_CLIENT_URL=http://127.0.0.1:9546 \
 CORE_CLIENT_TOKEN_FILE=/path/to/read-only.token \
-CARD_DATA_OUT=./data.json \
-node refresh.mjs
+CARD_DATA_OUT=./public/data/data.json \
+node scripts/refresh.mjs
 ```
 
 The token is read from a file, the backend URL must be `https` or loopback, the response is capped at 64 KB and type-checked, and an empty or malformed answer leaves the previous `data.json` untouched. Give the job a read-only token for these two endpoints only.
 
 ## Deploy
 
-Any static host or nginx. Recommended: long immutable caching for `fonts/`, `flags/` and `?v=` assets, short caching for `index.html` and `data.json`, gzip/brotli for text assets, HTTPS with HSTS, and a Content-Security-Policy (the single inline theme script in `index.html` needs a hash). Bump the `?v=` query in `index.html` when you change `app.js`, `style.css` or `content.js`.
+Any static host or nginx. Recommended: long immutable caching for `assets/` and `?v=` files, short caching for `index.html` and `data.json`, gzip/brotli for text assets, HTTPS with HSTS, and a Content-Security-Policy (the single inline theme script in `index.html` needs a hash). Bump the `?v=` query in `index.html` when you change `js/app.js`, `css/style.css` or `js/content.js` (serve the `public/` folder).
 
 ## Licences
 
 Project code: [MIT](LICENSE). Flags ([flag-icons](https://github.com/lipis/flag-icons), MIT) and fonts ([Onest](https://github.com/googlefonts/onest), [Jost](https://github.com/indestructible-type/Jost), SIL OFL 1.1) keep their authors' licences: see [NOTICE.md](NOTICE.md) and [`licenses/`](licenses/).
 
-The Antivibecoding VPN name, brand and the service/bot addresses in `content.js` belong to the project; replace them when you fork.
+The Antivibecoding VPN name, brand and the service/bot addresses in `public/js/content.js` belong to the project; replace them when you fork.

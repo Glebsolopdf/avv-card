@@ -129,9 +129,9 @@
       var li = document.createElement('li');
       li.innerHTML = '<span class="flag"><img alt="" width="160" height="120" loading="lazy"></span><span class="nm"></span><span class="cc"></span>';
       var img = li.querySelector('img');
-      img.src = 'flags/' + r.code + '.svg';
+      img.src = 'assets/flags/' + r.code + '.svg';
       img.onerror = function () { img.remove(); };
-      pixelFlag(li, li.querySelector('.flag'), 'flags/' + r.code + '.svg');
+      pixelFlag(li, li.querySelector('.flag'), 'assets/flags/' + r.code + '.svg');
       li.querySelector('.nm').textContent = r.name;
       li.querySelector('.cc').textContent = r.code.toUpperCase();
       cl.appendChild(li);
@@ -148,7 +148,7 @@
 
   // the page picks up new data by itself; the visitor does nothing
   function pull() {
-    return fetch('data.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    return fetch('data/data.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       if (d && Array.isArray(d.tariffs)) { apply(d); }
     }).catch(function () {});
   }
