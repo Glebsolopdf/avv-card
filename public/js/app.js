@@ -28,7 +28,48 @@
   }
   function quotaText(q) { return bytes(q.limit_bytes) + ' ' + period(q); }
 
+  // Tariffs are divided by how their traffic is limited, with nothing to configure: a quota for the whole term, quotas
+  // that repeat (rolling or calendar windows) or none. The order is fixed, a kind nobody sells is left out, and one
+  // section means no buttons. A whole-term quota wins over a repeating one on the same tariff.
+  var picked = null;
+  var tabs = document.createElement('div');
+  tabs.className = 'plan-groups';
+  tabs.setAttribute('role', 'group');
+  tabs.setAttribute('aria-label', 'Виды тарифов');
+  tabs.hidden = true;
+  list.parentNode.insertBefore(tabs, list);
+
+  function sections(items) {
+    var kinds = { periodic: [], lifetime: [], unlimited: [] };
+    items.forEach(function (t) {
+      var qs = t.quotas || [];
+      var life = qs.some(function (q) { return q.type === 'lifetime'; });
+      kinds[life ? 'lifetime' : qs.length ? 'periodic' : 'unlimited'].push(t);
+    });
+    return [['periodic', 'Лимит по периодам'], ['lifetime', 'Лимит на весь срок'], ['unlimited', 'Без лимита']]
+      .filter(function (k) { return kinds[k[0]].length; })
+      .map(function (k) { return { name: k[1], items: kinds[k[0]] }; });
+  }
+
   function renderTariffs(items) {
+    var all = sections(items);
+    var cur = all.filter(function (s) { return s.name === picked; })[0] || all[0];
+    tabs.textContent = '';
+    tabs.hidden = all.length < 2;
+    if (all.length > 1) {
+      all.forEach(function (s) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = s.name;
+        b.setAttribute('aria-pressed', String(s === cur));
+        b.addEventListener('click', function () { picked = s.name; renderTariffs(items); });
+        tabs.appendChild(b);
+      });
+    }
+    renderCards(cur ? cur.items : []);
+  }
+
+  function renderCards(items) {
     list.textContent = '';
     items.forEach(function (t) {
       var pop = S.popularKey && t.key === S.popularKey;
@@ -130,9 +171,9 @@
       var li = document.createElement('li');
       li.innerHTML = '<span class="flag"><img alt="" width="160" height="120" loading="lazy"></span><span class="nm"></span><span class="cc"></span>';
       var img = li.querySelector('img');
-      img.src = 'assets/flags/' + r.code + '.svg';
+      img.src = 'flags/' + r.code + '.svg';
       img.onerror = function () { img.remove(); };
-      pixelFlag(li, li.querySelector('.flag'), 'assets/flags/' + r.code + '.svg');
+      pixelFlag(li, li.querySelector('.flag'), 'flags/' + r.code + '.svg');
       li.querySelector('.nm').textContent = r.name;
       li.querySelector('.cc').textContent = r.code.toUpperCase();
       cl.appendChild(li);
@@ -149,7 +190,7 @@
 
   // the page picks up new data by itself; the visitor does nothing
   function pull() {
-    return fetch('data/data.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    return fetch('data.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       if (d && Array.isArray(d.tariffs)) { apply(d); }
     }).catch(function () {});
   }

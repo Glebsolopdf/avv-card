@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>404. Страница не найдена · Antivibecoding VPN</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#2b2f2e">
+<script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("avv-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"soft":"light"))}catch(e){document.documentElement.setAttribute("data-theme","light")}</script>
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Onest";src:url(/assets/fonts/onest-cyrillic.woff2) format("woff2");font-weight:100 900;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap}
+@font-face{font-family:"Onest";src:url(/assets/fonts/onest-latin.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap}
+@font-face{font-family:"Jost";src:url(/assets/fonts/jost-latin.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap}
+:root{--paper:#f7f8f4;--ink:#1b1e1d;--ink-2:#56605a;--acc:#5d7650;--on-acc:#fff;--grid:rgba(27,30,29,.11)}
+html[data-theme="soft"]{color-scheme:dark;--paper:#2b2f2e;--ink:#f1f2ef;--ink-2:#a9b1ac;--acc:#a9bb9a;--on-acc:#141716;--grid:rgba(241,242,239,.11)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;display:grid;place-items:center;padding:24px 16px;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 "Onest",system-ui,sans-serif;position:relative;overflow:hidden}
+body::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:56px 56px;background-position:center}
+main{position:relative;z-index:1;text-align:center}
+.field{--c:clamp(16px,5.4vw,52px);position:relative;display:grid;grid-template-columns:repeat(13,var(--c));grid-template-rows:repeat(7,var(--c));margin:0 auto;width:max-content;user-select:none;-webkit-user-select:none}
+.px{grid-column:var(--x);grid-row:var(--y);background:var(--ink);animation:pop .5s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i)*22ms + 150ms)}
+.field.done .px{animation:gone .55s ease-in both;animation-delay:calc(var(--i)*14ms)}
+#bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.pkt{position:absolute;left:0;top:0;width:8px;height:8px;margin:-4px 0 0 -4px;background:var(--acc);will-change:transform}
+.lost{position:fixed;left:0;top:0;z-index:3;width:48px;height:48px;background:var(--acc);pointer-events:none;transform:translate(var(--lx),var(--ly)) scale(var(--s,1));transition:transform .45s cubic-bezier(.16,1,.3,1)}
+h1{margin:2rem 0 .5rem;font:600 clamp(1.5rem,4vw,2.25rem)/1.1 "Jost","Onest",sans-serif;letter-spacing:-.02em}
+p{margin:0 auto 2rem;max-width:38ch;color:var(--ink-2)}
+a{display:inline-flex;align-items:center;min-height:48px;padding:0 1.6rem;background:var(--acc);color:var(--on-acc);font:600 1rem "Onest",sans-serif;text-decoration:none;border:2px solid var(--acc);transition:background-color .25s,color .25s}
+a:hover{background:transparent;color:var(--acc)}
+a:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+@keyframes pop{from{opacity:0;transform:scale(.2)}}
+@keyframes gone{to{opacity:0;transform:translateY(-1.2em) scale(.2)}}
+@media (prefers-reduced-motion:reduce){.px{animation:none}.lost{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <div class="field" id="field" aria-hidden="true"></div>
+  <h1 id="t">Эта страница потерялась</h1>
+  <p id="d">Пакет не дошёл до адреса. Зелёный квадрат ищет его давно, но вам лучше вернуться на главную.</p>
+  <a href="/">На главную</a>
+</main>
+<script>
+(function(){
+var F=document.getElementById("field"),G={4:["101","101","111","001","001"],0:["111","101","101","101","111"]},n=0,taken={};
+"404".split("").forEach(function(ch,k){G[ch].forEach(function(row,y){row.split("").forEach(function(v,x){
+  if(v==="1"){var e=document.createElement("i");e.className="px";var cx=1+k*4+x,cy=1+y;
+  e.style.cssText="--x:"+(cx+1)+";--y:"+(cy+1)+";--i:"+((n*7)%23);n++;taken[cx+","+cy]=1;F.appendChild(e)}})})});
+var BG=document.createElement("div");BG.id="bg";document.body.insertBefore(BG,document.body.firstChild);
+var b=document.createElement("div");b.className="lost";b.setAttribute("aria-hidden","true");BG.style.pointerEvents="none";document.body.appendChild(b);
+var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches,caught=false,busy=false,G56=56,W,H,X0,Y0,cols,rows;
+function metrics(){W=innerWidth;H=innerHeight;X0=((W-G56)/2%G56+G56)%G56;Y0=((H-G56)/2%G56+G56)%G56;cols=Math.floor((W-X0)/G56);rows=Math.floor((H-Y0)/G56)}
+metrics();addEventListener("resize",metrics);
+function cell(c,r){return{x:X0+c*G56,y:Y0+r*G56}}
+function blocked(){var o=[];document.querySelectorAll(".px,h1,p,a").forEach(function(e){var r=e.getBoundingClientRect();o.push([r.left-10,r.top-10,r.right+10,r.bottom+10])});return o}
+var cur={c:-1,r:-1};
+var mx=-999,my=-999,lastFlee=0,home=true;
+function pick(home){var o=blocked(),t=0,c,r,p,ok,fr=F.getBoundingClientRect();do{c=Math.floor(Math.random()*cols);r=Math.floor(Math.random()*rows);p=cell(c,r);ok=!(c===cur.c&&r===cur.r);
+ if(home)ok=ok&&p.x>fr.left-G56*1.5&&p.x<fr.right+G56*.5&&p.y>fr.top-G56*1.5&&p.y<fr.bottom+G56*.5;
+ else ok=ok&&Math.hypot(p.x+G56/2-mx,p.y+G56/2-my)>G56*4&&Math.abs(c-cur.c)+Math.abs(r-cur.r)<=7;for(var i=0;ok&&i<o.length;i++)if(p.x+G56>o[i][0]&&p.x<o[i][2]&&p.y+G56>o[i][1]&&p.y<o[i][3])ok=false;t++}while(!ok&&t<80);return{c:c,r:r}}
+function place(p){var q=cell(p.c,p.r);b.style.setProperty("--lx",(q.x+(G56-48)/2)+"px");b.style.setProperty("--ly",(q.y+(G56-48)/2)+"px")}
+function scatter(){var q=cell(cur.c,cur.r),ox=q.x+G56/2,oy=q.y+G56/2;
+ BG.querySelectorAll(".pkt").forEach(function(e){if(e.dataset.run)return;e.dataset.run=1;var r=e.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=cx-ox,dy=cy-oy,l=Math.hypot(dx,dy)||1,k=Math.max(W,H)*1.3/l,pk=e.classList.contains("pkt");
+  e.getAnimations().forEach(function(a){a.cancel()});
+  e.style.transform="translate("+cx+"px,"+cy+"px)";
+  var a0=pk?"translate("+cx+"px,"+cy+"px)":"translate(0,0)",a1=pk?"translate("+(cx+dx*k)+"px,"+(cy+dy*k)+"px)":"translate("+dx*k+"px,"+dy*k+"px)";
+  if(!e.animate){e.remove();return}
+  var an=e.animate([{transform:a0},{transform:a1}],{duration:700+Math.random()*300,easing:"cubic-bezier(.6,0,1,.6)",fill:"forwards"});an.onfinish=function(){e.remove()}})}
+function hop(toHome){
+ if(caught||busy)return;busy=true;home=!!toHome;if(!toHome)scatter();
+ var nx=pick(home);place(nx);cur=nx;setTimeout(function(){busy=false},toHome?500:320)}
+var st=pick(true);cur=st;place(st);b.style.setProperty("--s",0);setTimeout(function(){b.style.setProperty("--s",1)},1200);
+if(!reduce){
+ setInterval(function(){if(caught||busy)return;if(!home&&Date.now()-lastFlee>5000)hop(true);else if(home&&Math.random()<.4)hop(true)},3500);
+ document.addEventListener("pointermove",function(e){mx=e.clientX;my=e.clientY;if(caught||busy||e.pointerType==="touch")return;var q=cell(cur.c,cur.r),dx=e.clientX-(q.x+G56/2),dy=e.clientY-(q.y+G56/2);if(Math.hypot(dx,dy)<G56*1.3){lastFlee=Date.now();hop(false)}});
+ function packet(){if(document.hidden||!b.animate)return;var h=Math.random()<.7,e=document.createElement("i"),rev=Math.random()<.5,n,len,from,to,line;e.className="pkt";
+  if(h){line=Y0+Math.floor(Math.random()*(rows+1))*G56;len=W;n=Math.round(W/G56*2);from=rev?W+8:-8;to=rev?-8:W+8;e.animate([{transform:"translate("+from+"px,"+line+"px)"},{transform:"translate("+to+"px,"+line+"px)"}],{duration:n*140,easing:"steps("+n+")"})}
+  else{line=X0+Math.floor(Math.random()*(cols+1))*G56;n=Math.round(H/G56*2);from=rev?H+8:-8;to=rev?-8:H+8;e.animate([{transform:"translate("+line+"px,"+from+"px)"},{transform:"translate("+line+"px,"+to+"px)"}],{duration:n*140,easing:"steps("+n+")"})}
+  BG.appendChild(e);setTimeout(function(){e.remove()},n*140+50)}
+ setInterval(packet,1800);packet()}
+})();
+</script>
+</body>
+</html>
