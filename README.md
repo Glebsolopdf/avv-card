@@ -104,6 +104,8 @@ node scripts/refresh.mjs
 - HTTPS и заголовки `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`;
 - желательна Content-Security-Policy (в `index.html` есть один inline-скрипт выбора темы, ему нужен хэш).
 
+Страница Terra лежит в `public/terra.html`; чтобы она открывалась без `.html`, добавьте в nginx `location = /terra { try_files /terra.html =404; }` и перенаправление с `/terra.html` на `/terra`.
+
 При изменении `js/app.js`, `css/style.css` или `js/content.js` поднимайте `?v=` в `index.html`. Веб-серверу отдавайте папку `public/`.
 
 ## Лицензии
