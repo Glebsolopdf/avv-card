@@ -330,3 +330,7 @@ html[data-theme="soft"] .tt-rays{opacity:1;transform:none}
   .countries .cc{padding:0 .55rem .5rem;font-size:.625rem}
   .countries li:hover{transform:none}
 }
+
+/* text for screen readers and crawlers, not painted; the link shows itself when it gets keyboard focus */
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.sr-only a:focus-visible{position:fixed;left:1rem;bottom:1rem;z-index:99;width:auto;height:auto;padding:.5rem .8rem;clip:auto;clip-path:none;overflow:visible;background:var(--ink,#111);color:var(--bg,#fff);outline:2px solid currentColor}
