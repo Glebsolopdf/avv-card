@@ -40,15 +40,6 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
 /* вступление лучей в такт буквам: сначала пробивается один луч (сверху вниз), затем остальные по очереди; задержки --ri выставляет скрипт */
 .stage.intro .water i{animation:rayIn 1.3s cubic-bezier(.22,.8,.25,1) var(--ri,0s) both}
 .stage.intro .light{animation:lightIn 2s ease-out .7s both}
-/* тряска камеры, пока летят буквы: лёгкая дрожь, затухающая к посадке; сдвиг и поворот через отдельные свойства translate/rotate, чтобы не мешать остальным transform */
-.stage.intro > .lights,.stage.intro > .s-intro{animation:camShake 2.2s linear .1s both}
-@keyframes camShake{
-  0%{translate:0 0;rotate:0deg}
-  6%{translate:-3px 2px;rotate:.12deg}12%{translate:3px -3px;rotate:-.14deg}18%{translate:-4px -2px;rotate:.1deg}
-  24%{translate:4px 3px;rotate:-.12deg}30%{translate:-3px 3px;rotate:.14deg}36%{translate:3px -2px;rotate:-.1deg}
-  44%{translate:-2.5px -2px;rotate:.1deg}52%{translate:2.5px 2px;rotate:-.08deg}60%{translate:-2px 1.5px;rotate:.07deg}
-  70%{translate:1.5px -1.5px;rotate:-.05deg}80%{translate:-1px 1px;rotate:.03deg}90%{translate:.5px -.5px;rotate:0deg}
-  100%{translate:0 0;rotate:0deg}}
 @keyframes rayIn{0%{opacity:0;scale:1 0}55%{opacity:1}100%{opacity:1;scale:1 1}}
 .lg{position:absolute;inset:0;opacity:0;will-change:opacity}
 .light{position:absolute;inset:0;pointer-events:none;
@@ -106,7 +97,7 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
 .down.show{opacity:1;pointer-events:auto}
 .down.first{animation:lightIn 1s ease 3.3s both}
 /* пропуск вступления по касанию/клику: все анимации заставки сразу в конечное состояние */
-.skip-intro .stage.intro > .lights,.skip-intro .stage.intro > .s-intro,.skip-intro .mega .ch,.skip-intro .late,.skip-intro .stage.intro .water i,.skip-intro .stage.intro .light,.skip-intro .top,.skip-intro .down.first{animation-duration:.01s!important;animation-delay:0s!important}
+.skip-intro .mega .ch,.skip-intro .late,.skip-intro .stage.intro .water i,.skip-intro .stage.intro .light,.skip-intro .top,.skip-intro .down.first{animation-duration:.01s!important;animation-delay:0s!important}
 .down svg{width:26px;height:26px;animation:bob 1.9s ease-in-out infinite}
 .down:hover{color:var(--ink)}
 @keyframes bob{0%,100%{transform:translateY(-3px);opacity:.55}50%{transform:translateY(6px);opacity:1}}
