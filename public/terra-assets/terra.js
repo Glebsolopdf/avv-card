@@ -257,12 +257,15 @@ if (reduce) {
     tgTimers.push(setTimeout(() => tgEl.classList.add("draw"), 600));
     tgTimers.push(setTimeout(() => tgEl.classList.add("fill"), 1650));
     tgTimers.push(setTimeout(() => tgEl.classList.add("blink"), 2050));
-    tgTimers.push(setTimeout(() => { tgEl.classList.add("open"); location.href = a.href; }, 2900));   // кнопка «Открыть Telegram» на случай, если приложение само не открылось
+    tgTimers.push(setTimeout(() => { tgEl.classList.add("open"); location.href = a.href; }, 1300));   // переход не ждёт конца анимации логотипа; кнопка «Открыть Telegram» на случай, если приложение само не открылось
     tgTimers.push(setTimeout(tgReset, 10000));                                                       // через 10 секунд экран перехода уходит сам
   }
   function tgReset() {
-    tgTimers.forEach(clearTimeout); tgTimers = []; tgBusy = false;
-    tgEl.classList.remove("on", "run", "draw", "fill", "blink", "open"); tgEl.setAttribute("aria-hidden", "true"); stage.classList.remove("dive");
+    tgTimers.forEach(clearTimeout); tgTimers = [];
+    if (!tgEl.classList.contains("on")) { tgBusy = false; return; }
+    tgEl.setAttribute("aria-hidden", "true"); stage.classList.remove("dive");   // сцена возвращается, пока экран растворяется
+    tgEl.classList.add("leave");
+    tgTimers.push(setTimeout(() => { tgEl.classList.remove("on", "run", "draw", "fill", "blink", "open", "leave"); tgBusy = false; }, 520));
   }
   addEventListener("pageshow", e => {                       // вернулись назад из Telegram: убираем переход
     if (!tgBusy && !e.persisted) return;

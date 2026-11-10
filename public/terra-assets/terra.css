@@ -134,6 +134,10 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
 @keyframes tgblink{0%,100%{opacity:1}18%{opacity:.08}36%{opacity:1}54%{opacity:.08}72%{opacity:1}}
 .tg-t,.tg-s{opacity:0;transition:opacity .45s ease}
 .tg.draw .tg-t,.tg.draw .tg-s{opacity:1}
+/* закрытие: экран тихо растворяется, самолётик чуть уходит вверх и уменьшается */
+.tg{opacity:1}
+.tg.leave{opacity:0;transition:opacity .45s ease}
+.tg.leave .tg-body{transform:translateY(-10px) scale(.97);transition:transform .45s ease}
 .tg-open{margin-top:.8rem;opacity:0;pointer-events:none;transition:opacity .4s ease,background-color .25s,color .25s}
 .tg.open .tg-open{opacity:1;pointer-events:auto}
 .tg-t{font:600 clamp(1.3rem,2.6vw,2rem)/1.1 var(--display);letter-spacing:-.01em;text-align:center}
