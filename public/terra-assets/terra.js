@@ -3,7 +3,7 @@ document.querySelectorAll("[data-buy]").forEach(a => a.href = "https://t.me/" + 
 document.querySelectorAll("[data-tg]").forEach(a => a.href = "https://t.me/" + BOT);
 
 /* лучи: у каждого свой случайный темп вспышек и сдвиг, чтобы они не мигали в унисон */
-document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (5 + Math.random() * 9).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 14).toFixed(1) + "s"); r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--Af", (12 + Math.random() * 18).toFixed(1) + "deg"); });
+document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (5 + Math.random() * 9).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 14).toFixed(1) + "s"); r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--A", (7 + Math.random() * 12).toFixed(1) + "deg"); });
 
 let introMs = 3600;   // сколько длится вступление; касание или клавиша обрывают его раньше
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;

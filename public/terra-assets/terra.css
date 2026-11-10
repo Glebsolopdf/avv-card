@@ -47,17 +47,15 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
      rgba(var(--lc),calc(var(--a)*.11)) 62%, rgba(var(--lc),calc(var(--a)*.05)) 74%, rgba(var(--lc),calc(var(--a)*.015)) 87%, rgba(var(--lc),0) 100%),
    radial-gradient(60% 45% at calc(100% - var(--lx)*1%) 115%,
      rgba(var(--lc),.13) 0%, rgba(var(--lc),.08) 30%, rgba(var(--lc),.03) 60%, rgba(var(--lc),0) 100%)}
-.water{position:absolute;inset:0;pointer-events:none;overflow:hidden;transform:translateX(calc((var(--lx) - 50)*.5vw))}
-/* угол и размах качания луча: сверху заголовка лучи сходятся веером (--r), дальше каждый поворачивается сам по себе (--rf, --Af выставляет скрипт); смена плавная */
-@property --ra{syntax:"<angle>";inherits:false;initial-value:0deg}
-@property --Aa{syntax:"<angle>";inherits:false;initial-value:6deg}
-.water i{--ra:var(--r);--Aa:6deg;transition:--ra 1.8s ease,--Aa 1.8s ease}
-.stage.free .water i{--ra:var(--rf,var(--r));--Aa:var(--Af,6deg)}
-.water i{position:absolute;top:-12%;left:var(--x);width:var(--w);height:125%;transform-origin:50% 0;transform:rotate(var(--ra));
+.water{position:absolute;top:0;bottom:0;left:-20vw;right:-20vw;pointer-events:none;overflow:hidden;transform:translateX(calc((var(--lx) - 50)*.5vw))}   /* шире экрана на 20vw с каждой стороны: сдвиг по --lx не открывает чёрную полосу сбоку */
+/* луч = обёртка <i> (базовый угол, плавно меняется) + ::before (само свечение, качается и мерцает). Сверху заголовка лучи сходятся веером (--r), дальше каждый разворачивается в свою сторону (--rf, --A выставляет скрипт) */
+.water i{position:absolute;top:-12%;left:calc(var(--x)*.714 + 14.29%);width:var(--w);height:125%;transform-origin:50% 0;transform:rotate(var(--r));transition:transform 2.2s cubic-bezier(.45,0,.2,1)}
+.stage.free .water i{transform:rotate(var(--rf,var(--r)))}
+.water i::before{content:"";position:absolute;inset:0;transform-origin:50% 0;
   background:linear-gradient(to bottom,rgba(var(--lc),.7) 0%,rgba(var(--lc),.5) 15%,rgba(var(--lc),.3) 33%,rgba(var(--lc),.15) 52%,rgba(var(--lc),.06) 70%,rgba(var(--lc),.015) 86%,rgba(var(--lc),0) 100%);
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 34%,#000 66%,transparent);mask-image:linear-gradient(90deg,transparent,#000 34%,#000 66%,transparent);   /* мягкие края вместо размытия: луч читается как луч и стоит дешевле блюра */
   opacity:.6;animation:sway var(--d) ease-in-out infinite alternate,glint var(--gd,9s) linear var(--gl,0s) infinite;will-change:transform,opacity}
-@keyframes sway{from{transform:rotate(calc(var(--ra) - var(--Aa))) scaleX(.75)}to{transform:rotate(calc(var(--ra) + var(--Aa))) scaleX(1.25)}}
+@keyframes sway{from{transform:rotate(calc(var(--A,6deg)*-1)) scaleX(.75)}to{transform:rotate(var(--A,6deg)) scaleX(1.25)}}
 /* случайные вспышки: у каждого луча своя длительность и сдвиг (их выставляет скрипт), неровные ступени дают нерегулярное мерцание */
 @keyframes glint{0%{opacity:.12}9%{opacity:.95}17%{opacity:.3}33%{opacity:.7}41%{opacity:.1}58%{opacity:1}66%{opacity:.35}82%{opacity:.8}100%{opacity:.12}}
 @keyframes lightIn{from{opacity:0}to{opacity:1}}
@@ -210,7 +208,7 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
 .veil.on{opacity:1;pointer-events:auto;transition:opacity .25s ease}
 .veil.on::before{transform:scale(1);transition:transform .95s cubic-bezier(.65,0,.3,1)}
 /* лучи мерцают и качаются только пока идёт прокрутка (и во вступлении): в покое анимация стоит и ничего не считает */
-.stage:not(.moving) .water i,.stage.calm .water i{animation-play-state:paused}
+.stage:not(.moving) .water i::before,.stage.calm .water i::before{animation-play-state:paused}
 .stage.dive .scene{transform:translateZ(480px) scale(1.15)!important;opacity:0;filter:blur(14px);transition:transform .95s cubic-bezier(.6,0,.4,1),opacity .8s ease .1s,filter .9s ease}
 /* переключатель тарифов: сверху, спокойный; на телефоне квадратная полоска внизу */
 .dots{position:fixed;left:50%;top:78px;z-index:15;display:flex;gap:clamp(1.2rem,3vw,2.4rem);transform:translateX(-50%) translateY(-6px);opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s var(--ease)}
@@ -257,7 +255,7 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
   .down svg{animation:none}
   .btn--tg::before,.cells .btn::before{transition-duration:.25s}
 }
-@media (prefers-reduced-motion:reduce){.water i{animation:none}}
+@media (prefers-reduced-motion:reduce){.water i::before{animation:none}}
 /* без анимации: просто вертикальный список */
 html.flat .track{height:auto}
 html.flat .stage{position:relative;height:auto;overflow:visible;perspective:none;padding-top:64px}
