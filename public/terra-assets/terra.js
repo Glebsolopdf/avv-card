@@ -152,6 +152,11 @@ if (reduce) {
     const p = cur / VH; VW = innerWidth; VH = innerHeight; setH(); cur = p * VH; scrollTo(0, cur); frame();
   });
   addEventListener("scroll", kick, { passive: true });
+  /* лучи оживают на время прокрутки: сразу при загрузке (вступление), затем при каждом движении и ещё чуть-чуть после него */
+  let movT = 0;
+  const moving = ms => { stage.classList.add("moving"); clearTimeout(movT); movT = setTimeout(() => stage.classList.remove("moving"), ms); };
+  moving(7000);
+  addEventListener("scroll", () => moving(1400), { passive: true });
   stage.querySelectorAll(".cells li").forEach(li => {
     li.addEventListener("mouseenter", () => { if (li.style.pointerEvents !== "auto") return; hovered = li; hoverL = li.dataset.l; kick(); });
     li.addEventListener("mouseleave", () => { if (hovered === li) { hovered = null; hoverL = null; } kick(); });
