@@ -74,8 +74,8 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
   text-shadow:0 0 calc(var(--g)*44px) rgba(var(--glow-rgb),calc(var(--g)*.3))}
 .mega .e1,.mega .e2{display:none}
 .mega .dot{display:none}
-/* появление «Terra»: буквы летят снизу по прямой с постоянной скоростью (linear), без остановок и «перелётов»; крен у каждой свой и плавно сходит на нет */
-.mega .ch{display:inline-block;transform-origin:50% 70%;will-change:transform,opacity,filter,rotate;animation:surface 1.7s linear both,roll 1.7s ease-in-out both}
+/* появление «Terra»: буквы летят снизу почти с постоянной скоростью и садятся по инерции: чуть проскакивают место и мягко возвращаются; крен у каждой свой и плавно сходит на нет */
+.mega .ch{display:inline-block;transform-origin:50% 70%;will-change:transform,opacity,filter,rotate;animation:surface 1.9s cubic-bezier(.3,.55,.3,1.22) both,roll 1.9s ease-in-out both}
 .mega .ch:nth-child(3){animation-delay:.05s;--bx:3vw;--bz:-10deg}
 .mega .ch:nth-child(2){animation-delay:.17s;--bx:-9vw;--bz:14deg}
 .mega .ch:nth-child(4){animation-delay:.29s;--bx:9vw;--bz:-14deg}
