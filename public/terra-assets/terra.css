@@ -74,14 +74,14 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
   text-shadow:0 0 calc(var(--g)*44px) rgba(var(--glow-rgb),calc(var(--g)*.3))}
 .mega .e1,.mega .e2{display:none}
 .mega .dot{display:none}
-/* появление «Terra»: буквы выплывают снизу экрана и плавно встают на место; только transform и opacity, поэтому без рывков */
-.mega .ch{display:inline-block;will-change:transform,opacity;animation:surface 1.9s cubic-bezier(.16,1,.3,1) both}
-.mega .ch:nth-child(2){animation-delay:.2s}
-.mega .ch:nth-child(4){animation-delay:.34s}
-.mega .ch:nth-child(1){animation-delay:.48s}
-.mega .ch:nth-child(3){animation-delay:.62s}
+/* появление «Terra»: буквы вылетают из камеры (как при перспективе: крупно и близко) и отлетают на своё место; только transform и opacity, без рывков */
+.mega .ch{display:inline-block;will-change:transform,opacity;animation:surface 2.2s cubic-bezier(.2,.9,.25,1) both}
+.mega .ch:nth-child(3){animation-delay:.2s}
+.mega .ch:nth-child(2){animation-delay:.34s}
+.mega .ch:nth-child(4){animation-delay:.48s}
+.mega .ch:nth-child(1){animation-delay:.62s}
 .mega .ch:nth-child(5){animation-delay:.78s}
-@keyframes surface{0%{opacity:0;transform:translate3d(0,75vh,0)}22%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes surface{0%{opacity:0;transform:scale(5.5)}28%{opacity:1}100%{opacity:1;transform:none}}
 .late{display:block;animation:lightIn 1.2s ease 2.4s both}
 .lead{font-size:clamp(1.0625rem,1.8vw,1.5rem);line-height:1.5;color:var(--ink-2);max-width:34rem}
 .down{position:fixed;left:50%;bottom:clamp(14px,3.2vh,30px);z-index:15;width:44px;height:44px;margin-left:-22px;display:grid;place-items:center;color:var(--ink-2);text-decoration:none;opacity:0;pointer-events:none;transition:opacity .5s ease}
