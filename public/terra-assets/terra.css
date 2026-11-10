@@ -74,19 +74,19 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
   text-shadow:0 0 calc(var(--g)*44px) rgba(var(--glow-rgb),calc(var(--g)*.3))}
 .mega .e1,.mega .e2{display:none}
 .mega .dot{display:none}
-/* появление «Terra»: буквы вылетают снизу, как самолёты: идут по дуге, кренятся и выравниваются, разворачиваясь в нормальное положение; только transform и opacity */
-.mega .ch{display:inline-block;transform-origin:50% 70%;will-change:transform,opacity;animation:surface 2.7s cubic-bezier(.3,.7,.25,1) both}
-.mega .ch:nth-child(3){animation-delay:.2s;--bx:3vw;--bz:-10deg}
-.mega .ch:nth-child(2){animation-delay:.34s;--bx:-9vw;--bz:14deg}
-.mega .ch:nth-child(4){animation-delay:.48s;--bx:9vw;--bz:-14deg}
-.mega .ch:nth-child(1){animation-delay:.62s;--bx:-17vw;--bz:18deg}
-.mega .ch:nth-child(5){animation-delay:.78s;--bx:18vw;--bz:-18deg}
+/* появление «Terra»: буквы летят снизу по прямой с постоянной скоростью (linear), без остановок и «перелётов»; крен у каждой свой и плавно сходит на нет */
+.mega .ch{display:inline-block;transform-origin:50% 70%;will-change:transform,opacity,filter,rotate;animation:surface 1.7s linear both,roll 1.7s ease-in-out both}
+.mega .ch:nth-child(3){animation-delay:.05s;--bx:3vw;--bz:-10deg}
+.mega .ch:nth-child(2){animation-delay:.17s;--bx:-9vw;--bz:14deg}
+.mega .ch:nth-child(4){animation-delay:.29s;--bx:9vw;--bz:-14deg}
+.mega .ch:nth-child(1){animation-delay:.41s;--bx:-17vw;--bz:18deg}
+.mega .ch:nth-child(5){animation-delay:.53s;--bx:18vw;--bz:-18deg}
 @keyframes surface{
-  0%{opacity:0;transform:perspective(900px) translate3d(var(--bx,0),58vh,300px) rotateX(86deg) rotateZ(var(--bz,0deg))}
-  16%{opacity:1}
-  55%{opacity:1;transform:perspective(900px) translate3d(calc(var(--bx,0)*.22),12vh,-70px) rotateX(40deg) rotateZ(calc(var(--bz,0deg)*-.45))}
-  82%{transform:perspective(900px) translate3d(0,-1.6vh,14px) rotateX(-7deg) rotateZ(calc(var(--bz,0deg)*.12))}
-  100%{opacity:1;transform:perspective(900px) translate3d(0,0,0) rotateX(0deg) rotateZ(0deg)}}
+  0%{opacity:0;filter:blur(16px);transform:perspective(900px) translate3d(var(--bx,0),46vh,200px) rotateX(84deg)}
+  8%{opacity:1}
+  88%{filter:blur(0)}   /* размытие сходит на нет к моменту, когда буква встаёт на место */
+  100%{opacity:1;filter:blur(0);transform:perspective(900px) translate3d(0,0,0) rotateX(0deg)}}
+@keyframes roll{0%{rotate:var(--bz,0deg)}55%{rotate:calc(var(--bz,0deg)*-.4)}100%{rotate:0deg}}
 .late{display:block;animation:lightIn 1.2s ease 2.4s both}
 .lead{font-size:clamp(1.0625rem,1.8vw,1.5rem);line-height:1.5;color:var(--ink-2);max-width:34rem}
 .down{position:fixed;left:50%;bottom:clamp(14px,3.2vh,30px);z-index:15;width:44px;height:44px;margin-left:-22px;display:grid;place-items:center;color:var(--ink-2);text-decoration:none;opacity:0;pointer-events:none;transition:opacity .5s ease}
