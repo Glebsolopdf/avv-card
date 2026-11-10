@@ -17,9 +17,14 @@ document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random(
     r.style.setProperty("--rf", ((x - 45) / 45 * 9 + Math.random() * 6 - 3).toFixed(1) + "deg");
     r.style.setProperty("--A", (6 + Math.random() * 6).toFixed(1) + "deg");
   }); });
+/* порядок выхода лучей: ближайший к центру пробивается первым, остальные следом, по очереди */
+document.querySelectorAll(".lg").forEach(lg => {
+  [...lg.querySelectorAll(".water i")].sort((a, b) => Math.abs(parseFloat(a.style.getPropertyValue("--x")) - 45) - Math.abs(parseFloat(b.style.getPropertyValue("--x")) - 45))
+    .forEach((r, k) => r.style.setProperty("--ri", (k === 0 ? .12 : .6 + (k - 1) * .16).toFixed(2) + "s"));
+});
 document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (11 + Math.random() * 10).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 30).toFixed(1) + "s"); });
 
-let introMs = 3800;   // сколько длится вступление; касание или клавиша обрывают его раньше
+let introMs = 4300;   // сколько длится вступление; касание или клавиша обрывают его раньше
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!reduce) {
   history.scrollRestoration = "manual"; scrollTo(0, 0); document.documentElement.classList.add("js-lock");
@@ -188,6 +193,7 @@ if (reduce) {
   let movT = 0;
   const moving = ms => { stage.classList.add("moving"); clearTimeout(movT); movT = setTimeout(() => stage.classList.remove("moving"), ms); };
   moving(introMs + 300);
+  setTimeout(() => stage.classList.remove("intro"), introMs + 1800);   // после вступления лучи живут обычной жизнью
   addEventListener("scroll", () => moving(1400), { passive: true });
   stage.querySelectorAll(".cells li").forEach(li => {
     li.addEventListener("mouseenter", () => { if (li.style.pointerEvents !== "auto") return; hovered = li; hoverL = li.dataset.l; kick(); });
@@ -203,7 +209,7 @@ if (reduce) {
   /* пропуск вступления: касание, клик или клавиша сразу показывают заголовок и открывают прокрутку */
   function skipIntro() {
     if (performance.now() - t0 >= introMs) return;
-    introMs = 0; document.documentElement.classList.add("skip-intro"); document.documentElement.style.overflow = "";
+    introMs = 0; document.documentElement.classList.add("skip-intro"); setTimeout(() => stage.classList.remove("intro"), 60); document.documentElement.style.overflow = "";
     down.classList.remove("first");
   }
   addEventListener("pointerdown", skipIntro, { passive: true });
