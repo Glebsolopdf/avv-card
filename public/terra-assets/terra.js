@@ -5,9 +5,11 @@ document.querySelectorAll("[data-tg]").forEach(a => a.href = "https://t.me/" + B
 /* лучи: у каждого свой случайный темп вспышек и сдвиг, чтобы они не мигали в унисон */
 const IS_MOB = matchMedia("(max-width:800px),(pointer:coarse)").matches;
 document.documentElement.classList.toggle("mob", IS_MOB);
+const titleSide = Math.random() < .5 ? -1 : 1;
 document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random() * 8 - 4, layerTilt = (Math.random() < .5 ? -1 : 1) * (9 + Math.random() * 7);   // на сцену один общий наклон: лучи смотрят в одну сторону
   if (!IS_MOB) lg.style.setProperty("--lx", "50");   // свет не тянется к блокам: общий центр, цвет остаётся по сцене
   lg.querySelectorAll(".water i").forEach(r => {
+    if (lg.dataset.l === "w") r.style.setProperty("--r", (titleSide * (11 + Math.random() * 8)).toFixed(1) + "deg");   // на заголовке лучи идут либо слева, либо справа (случайно при каждой загрузке)
     if (IS_MOB) {   // телефон: на сцены один общий наклон (лучи параллельны); на заголовке остаётся исходный веер с обеих сторон (--r из разметки)
       r.style.setProperty("--rf", (layerTilt + Math.random() * 5 - 2.5).toFixed(1) + "deg"); r.style.setProperty("--A", (4 + Math.random() * 4).toFixed(1) + "deg"); return;
     }
