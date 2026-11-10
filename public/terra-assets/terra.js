@@ -24,7 +24,7 @@ document.querySelectorAll(".lg").forEach(lg => {
 });
 document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (11 + Math.random() * 10).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 30).toFixed(1) + "s"); });
 
-let introMs = 4300;   // сколько длится вступление; касание или клавиша обрывают его раньше
+let introMs = 3700;   // сколько длится вступление; касание или клавиша обрывают его раньше
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!reduce) {
   history.scrollRestoration = "manual"; scrollTo(0, 0); document.documentElement.classList.add("js-lock");
