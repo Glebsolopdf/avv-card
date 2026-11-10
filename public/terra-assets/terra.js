@@ -3,9 +3,21 @@ document.querySelectorAll("[data-buy]").forEach(a => a.href = "https://t.me/" + 
 document.querySelectorAll("[data-tg]").forEach(a => a.href = "https://t.me/" + BOT);
 
 /* лучи: у каждого свой случайный темп вспышек и сдвиг, чтобы они не мигали в унисон */
-document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (5 + Math.random() * 9).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 14).toFixed(1) + "s"); r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--A", (7 + Math.random() * 12).toFixed(1) + "deg"); });
+const IS_MOB = matchMedia("(max-width:800px),(pointer:coarse)").matches;
+document.documentElement.classList.toggle("mob", IS_MOB);
+document.querySelectorAll(".lg").forEach(lg => { const lx = parseFloat(lg.style.getPropertyValue("--lx")) || 50;
+  lg.querySelectorAll(".water i").forEach(r => {
+    if (IS_MOB) { r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--A", (7 + Math.random() * 12).toFixed(1) + "deg"); return; }
+    r.style.setProperty("--Dr", (1.5 + Math.random() * 2.5).toFixed(1) + "vw");
+    // компьютер: лучи собираются вокруг «ключевого места» сцены (его задаёт --lx), чуть расходятся веером и качаются слабо
+    const x = parseFloat(r.style.getPropertyValue("--x")) || 50, base = parseFloat(r.style.getPropertyValue("--r")) || 0;
+    r.style.setProperty("--dx", (lx + (x - 45) * .4 - x - (lx - 50) * .5).toFixed(1) + "vw");   // контейнер уже сдвинут на (lx-50)*.5vw
+    r.style.setProperty("--rf", (base * .38 + (Math.random() * 8 - 4)).toFixed(1) + "deg");
+    r.style.setProperty("--A", (4 + Math.random() * 5).toFixed(1) + "deg");
+  }); });
+document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (16 + Math.random() * 14).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 30).toFixed(1) + "s"); });
 
-let introMs = 3600;   // сколько длится вступление; касание или клавиша обрывают его раньше
+let introMs = 3400;   // сколько длится вступление; касание или клавиша обрывают его раньше
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!reduce) {
   history.scrollRestoration = "manual"; scrollTo(0, 0); document.documentElement.classList.add("js-lock");
@@ -15,7 +27,7 @@ if (!reduce) {
 if (reduce) {
   document.documentElement.classList.add("flat");
 } else {
-  const MOB = matchMedia("(max-width:800px),(pointer:coarse)").matches;   // телефон: без блюра и тяжёлых теней
+  const MOB = IS_MOB;   // телефон: без блюра и тяжёлых теней
   let VH = innerHeight, VW = innerWidth;
   const track = document.getElementById("track"), stage = document.getElementById("stage"),
         dots = document.getElementById("dots"),
@@ -24,9 +36,20 @@ if (reduce) {
   const LG = {}; stage.querySelectorAll(".lg").forEach(el => LG[el.dataset.l] = el);
   const items = [...stage.querySelectorAll("[data-at]")].map(el => ({
     el, pe: el.hasAttribute("data-pe"), ry: +(el.dataset.ry || 0), at: +el.dataset.at, hold: +el.dataset.hold, enter: +(el.dataset.enter || 0.6), glow: +(el.dataset.glow || 0), rx: !!el.dataset.rx, soft: !!el.dataset.soft,
+    keep: IS_MOB ? 0 : (el.dataset.keep ? 1 : 0), pinY: 0, pinS: 1,
     mega: el.classList.contains("t-num") || el.querySelector(".mega") ? (el.matches(".mega") ? el : el.querySelector(".mega")) : null
   }));
   const EXIT = 0.45;
+  /* закреплённый заголовок: считаем, куда «Terra» сдвинуть (центр шапки) и во сколько раз уменьшить (до ~26px шрифта) */
+  function measurePin() {
+    for (const it of items) if (it.keep) {
+      const e = it.el, tr = e.style.transform; e.style.transform = "none";
+      const r = e.getBoundingClientRect(), fs = parseFloat(getComputedStyle(it.mega || e).fontSize) || 200;
+      e.style.transform = tr;
+      it.pinY = 32 - (r.top + r.height / 2); it.pinS = Math.min(1, 26 / fs);
+    }
+  }
+  measurePin(); if (document.fonts) document.fonts.ready.then(measurePin); addEventListener("resize", measurePin);
   /* выход начинается сразу после остановки сцены, а не позже: уходит быстро и по очереди */
   const STOPS0 = [0, 1.85, 3.5, 4.85, 5.8, 6.75, 7.7, 8.9];
   {
@@ -85,12 +108,12 @@ if (reduce) {
     const vh = VH, pos = cur / vh;
     stage.classList.toggle("calm", pos > 7.25);
     stage.classList.toggle("free", pos > .7);
-    stage.classList.toggle("top", pos < .7);   // на заголовке лучи не замирают после вступления   // после заголовка лучи расходятся каждый в свою сторону
+    stage.classList.toggle("atop", pos < .7);   // на заголовке лучи не замирают после вступления   // после заголовка лучи расходятся каждый в свою сторону
     if (onlyEnd && pos < 6.9) { onlyEnd = false; kick(); }   // вернулись к X20 свайпом назад: остановка 6.75 не меньше 6.75, поэтому порог с запасом (прыжок «К тарифам» стартует с 7.05)
     let lightMax = 0;
     for (const it of items) {
       const d = pos - it.at;
-      let z = 0, y = 0, op = 1, sp = 0, g = 0, rx = 0, ry = 0, bl = 0;
+      let z = 0, y = 0, op = 1, sp = 0, g = 0, rx = 0, ry = 0, bl = 0, sc = 0;
       if (d < -it.enter) { op = 0; }
       else if (d < 0) {
         const f = -d / it.enter;
@@ -105,6 +128,7 @@ if (reduce) {
       } else {
         const x = Math.min(1, (d - it.hold) / EXIT);
         z = 620 * Math.pow(x, 1.4); y = -46 * x; ry = -it.ry * x * 26; op = Math.max(0, 1 - x * 1.9); sp = x * .6; bl = x * (it.soft ? 8 : 16); g = it.glow ? op : 0;
+        if (it.keep) { op = 1; z = 0; ry = 0; bl = 0; g = 0; y = it.pinY * x; sc = 1 - (1 - it.pinS) * x; }   // большое «Terra» не пропадает: уменьшается и закрепляется посередине шапки
       }
       if (it.at < 7.35) op *= maskV;
       const e = it.el;
@@ -112,7 +136,7 @@ if (reduce) {
       if (op <= 0.003) { if (e._v !== 0) { e.style.opacity = 0; e._v = 0; } continue; }
       e._v = 1;
       e.style.opacity = op.toFixed(3);
-      e.style.transform = `translate3d(0,${y.toFixed(1)}px,${z.toFixed(1)}px)` + (it.rx ? ` rotateX(${(rx * -50).toFixed(1)}deg)` : "") + (ry ? ` rotateY(${ry.toFixed(1)}deg)` : "");
+      e.style.transform = `translate3d(0,${y.toFixed(1)}px,${z.toFixed(1)}px)` + (it.rx ? ` rotateX(${(rx * -50).toFixed(1)}deg)` : "") + (ry ? ` rotateY(${ry.toFixed(1)}deg)` : "") + (sc ? ` scale(${sc.toFixed(3)})` : "");
       if (MOB && !it.mega) bl *= .35;   // на телефоне весь текст, кроме заголовка и крупных чисел, размывается слабее
       e.style.filter = bl > .4 ? `blur(${bl.toFixed(1)}px)` : "";
       if (it.glow || it.mega) {
@@ -204,12 +228,14 @@ if (reduce) {
     const next = dir > 0 ? STOPS.find(v => v > pos + .06) : [...STOPS].reverse().find(v => v < pos - .06);
     if (next !== undefined) goTo(next);
   }
+  let wheelT = 0, wheelD = 0;
   addEventListener("wheel", e => {
     e.preventDefault();
-    const now = performance.now();
-    if (anim) return;
-    if (now < blockUntil) { if (Math.abs(e.deltaY) < 30) blockUntil = now + 250; return; }   // хвост инерции трекпада
-    if (Math.abs(e.deltaY) < 4) return;
+    const now = performance.now(), d = Math.abs(e.deltaY);
+    // новый жест = пауза между событиями или заметный рост силы после затухания; хвост инерции трекпада не считается
+    const fresh = now - wheelT > 160 || d > wheelD + 12;
+    wheelT = now; wheelD = d;
+    if (d < 4 || !fresh) return;
     stepBy(e.deltaY);
   }, { passive: false });
   let ty = null;
