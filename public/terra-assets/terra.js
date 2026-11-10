@@ -178,21 +178,25 @@ if (reduce) {
   }
   addEventListener("pointerdown", skipIntro, { passive: true });
   addEventListener("keydown", skipIntro);
-  let anim = false, blockUntil = 0, idleTimer = 0;
+  let anim = false, blockUntil = 0, idleTimer = 0, animTo = null, tok = 0, hard = false, lastStep = 0;   // hard: переход «К тарифам» нельзя перебить
   const ease = t => t < .5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;   // медленный старт и мягкая остановка
   function goTo(pos) {
     const from = scrollY, to = Math.round(pos * VH), dist = Math.abs(to - from);
     if (dist < 2) return;
-    anim = true; const dur = Math.min(2200, 1100 + dist / VH * 500), st = performance.now();
+    anim = true; animTo = to; const my = ++tok, dur = Math.min(2200, 1100 + dist / VH * 500), st = performance.now();
     (function step(now) {
+      if (my !== tok) return;                         // начался другой переход: этот отменён
       const k = Math.min(1, (now - st) / dur);
       scrollTo(0, from + (to - from) * ease(k));
-      if (k < 1) requestAnimationFrame(step); else { anim = false; blockUntil = performance.now() + 500; }
+      if (k < 1) requestAnimationFrame(step); else { anim = false; animTo = null; blockUntil = performance.now() + 500; }
     })(st);
   }
   function stepBy(dir) {
-    if (anim || performance.now() - t0 < introMs) return;
-    const pos = scrollY / VH;
+    const now = performance.now();
+    if (hard || now - t0 < introMs) return;
+    if (anim && now - lastStep < 200) return;         // защита от двойного срабатывания одним жестом
+    lastStep = now;
+    const pos = (anim && animTo !== null ? animTo : scrollY) / VH;   // во время перехода следующий шаг считается от цели, жест не теряется
     const next = dir > 0 ? STOPS.find(v => v > pos + .06) : [...STOPS].reverse().find(v => v < pos - .06);
     if (next !== undefined) goTo(next);
   }
@@ -205,10 +209,16 @@ if (reduce) {
     stepBy(e.deltaY);
   }, { passive: false });
   let ty = null;
-  addEventListener("touchstart", e => { ty = e.touches[0].clientY; }, { passive: true });
+  let fired = false;
+  addEventListener("touchstart", e => { ty = e.touches[0].clientY; fired = false; }, { passive: true });
+  addEventListener("touchmove", e => {                 // переход стартует, как только палец прошёл ~26px, не дожидаясь отрыва
+    if (ty === null || fired) return;
+    const dy = ty - e.touches[0].clientY;
+    if (Math.abs(dy) > 26) { fired = true; stepBy(dy); }
+  }, { passive: true });
   addEventListener("touchend", e => {
     if (ty === null) return; const dy = ty - e.changedTouches[0].clientY; ty = null;
-    if (Math.abs(dy) > 36) stepBy(dy);
+    if (!fired && Math.abs(dy) > 36) stepBy(dy);
   }, { passive: true });
   addEventListener("keydown", e => {
     if (e.target.closest && e.target.closest("input,textarea,select")) return;
@@ -227,7 +237,7 @@ if (reduce) {
       goTo(near);
     }, 320);
   }, { passive: true });
-  dotBtns.forEach(b => b.addEventListener("click", () => { if (!anim) goTo(+b.dataset.go + .25); }));
+  dotBtns.forEach(b => b.addEventListener("click", () => { if (!hard) goTo(+b.dataset.go + .25); }));
   /* переход в Telegram: квадрат цвета тарифа вырастает из кнопки, сцена проваливается, затем открывается бот */
   const tgEl = document.getElementById("tg"), tgSub = document.getElementById("tgSub");
   let tgBusy = false;
@@ -267,13 +277,13 @@ if (reduce) {
     if (anim || performance.now() - t0 < introMs) return;
     const end = 7.7;                       // остановка с карточками тарифов
     if (scrollY / VH > end - .6) { goTo(end); return; }
-    anim = true; stage.classList.add("dive"); veil.classList.add("on");
+    anim = true; hard = true; stage.classList.add("dive"); veil.classList.add("on");
     setTimeout(() => {
       const y = Math.round((end - .65) * VH);
       onlyEnd = true; maskV = 0;                 // старые сцены не показываем
       scrollTo(0, y); cur = y; frame();
       stage.classList.remove("dive"); veil.classList.remove("on");
-      setTimeout(() => { anim = false; goTo(end); }, 350);
+      setTimeout(() => { anim = false; hard = false; goTo(end); }, 350);
     }, 950);
   });
 }
