@@ -243,7 +243,8 @@ if (reduce) {
   dotBtns.forEach(b => b.addEventListener("click", () => { if (!hard) goTo(+b.dataset.go + .25); }));
   /* переход в Telegram: квадрат цвета тарифа вырастает из кнопки, сцена проваливается, затем открывается бот */
   const tgEl = document.getElementById("tg"), tgSub = document.getElementById("tgSub");
-  let tgBusy = false;
+  let tgBusy = false, tgTimers = [];
+  const tgOpen = document.getElementById("tgOpen");
   function goTelegram(a) {
     if (tgBusy) return; tgBusy = true;
     const li = a.closest("li"), r = a.getBoundingClientRect();
@@ -252,14 +253,20 @@ if (reduce) {
     tgEl.classList.add("on"); void tgEl.offsetWidth;
     stage.classList.add("dive");
     requestAnimationFrame(() => tgEl.classList.add("run"));
-    setTimeout(() => tgEl.classList.add("draw"), 600);
-    setTimeout(() => tgEl.classList.add("fill"), 1650);
-    setTimeout(() => tgEl.classList.add("blink"), 2050);
-    setTimeout(() => { location.href = a.href; }, 2900);
+    tgEl.setAttribute("aria-hidden", "false"); tgOpen.href = a.href;
+    tgTimers.push(setTimeout(() => tgEl.classList.add("draw"), 600));
+    tgTimers.push(setTimeout(() => tgEl.classList.add("fill"), 1650));
+    tgTimers.push(setTimeout(() => tgEl.classList.add("blink"), 2050));
+    tgTimers.push(setTimeout(() => { tgEl.classList.add("open"); location.href = a.href; }, 2900));   // кнопка «Открыть Telegram» на случай, если приложение само не открылось
+    tgTimers.push(setTimeout(tgReset, 10000));                                                       // через 10 секунд экран перехода уходит сам
+  }
+  function tgReset() {
+    tgTimers.forEach(clearTimeout); tgTimers = []; tgBusy = false;
+    tgEl.classList.remove("on", "run", "draw", "fill", "blink", "open"); tgEl.setAttribute("aria-hidden", "true"); stage.classList.remove("dive");
   }
   addEventListener("pageshow", e => {                       // вернулись назад из Telegram: убираем переход
     if (!tgBusy && !e.persisted) return;
-    tgBusy = false; tgEl.classList.remove("on", "run", "draw", "fill", "blink"); stage.classList.remove("dive");
+    tgReset();
   });
   document.querySelectorAll("a[data-buy], a[data-tg]").forEach(a => a.addEventListener("click", e => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
