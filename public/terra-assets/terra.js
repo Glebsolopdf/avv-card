@@ -5,19 +5,20 @@ document.querySelectorAll("[data-tg]").forEach(a => a.href = "https://t.me/" + B
 /* лучи: у каждого свой случайный темп вспышек и сдвиг, чтобы они не мигали в унисон */
 const IS_MOB = matchMedia("(max-width:800px),(pointer:coarse)").matches;
 document.documentElement.classList.toggle("mob", IS_MOB);
-document.querySelectorAll(".lg").forEach(lg => { const lx = parseFloat(lg.style.getPropertyValue("--lx")) || 50;
+document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random() * 8 - 4;
+  if (!IS_MOB) lg.style.setProperty("--lx", "50");   // свет не тянется к блокам: общий центр, цвет остаётся по сцене
   lg.querySelectorAll(".water i").forEach(r => {
     if (IS_MOB) { r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--A", (7 + Math.random() * 12).toFixed(1) + "deg"); return; }
-    r.style.setProperty("--Dr", (1.5 + Math.random() * 2.5).toFixed(1) + "vw");
-    // компьютер: лучи собираются вокруг «ключевого места» сцены (его задаёт --lx), чуть расходятся веером и качаются слабо
-    const x = parseFloat(r.style.getPropertyValue("--x")) || 50, base = parseFloat(r.style.getPropertyValue("--r")) || 0;
-    r.style.setProperty("--dx", (lx + (x - 45) * .4 - x - (lx - 50) * .5).toFixed(1) + "vw");   // контейнер уже сдвинут на (lx-50)*.5vw
-    r.style.setProperty("--rf", (base * .38 + (Math.random() * 8 - 4)).toFixed(1) + "deg");
-    r.style.setProperty("--A", (4 + Math.random() * 5).toFixed(1) + "deg");
+    r.style.setProperty("--Dr", (1 + Math.random() * 1.8).toFixed(1) + "vw");
+    // компьютер: лучи не привязаны к блокам. Расходятся по всей ширине с небольшим случайным сдвигом, слегка веером наружу и качаются слабо
+    const x = parseFloat(r.style.getPropertyValue("--x")) || 50;
+    r.style.setProperty("--dx", (layerShift + Math.random() * 6 - 3).toFixed(1) + "vw");
+    r.style.setProperty("--rf", ((x - 45) / 45 * 9 + Math.random() * 6 - 3).toFixed(1) + "deg");
+    r.style.setProperty("--A", (3 + Math.random() * 3).toFixed(1) + "deg");
   }); });
 document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (16 + Math.random() * 14).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 30).toFixed(1) + "s"); });
 
-let introMs = 3400;   // сколько длится вступление; касание или клавиша обрывают его раньше
+let introMs = 3800;   // сколько длится вступление; касание или клавиша обрывают его раньше
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!reduce) {
   history.scrollRestoration = "manual"; scrollTo(0, 0); document.documentElement.classList.add("js-lock");
