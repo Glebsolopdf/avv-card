@@ -22,6 +22,9 @@
 <meta name="theme-color" content="#2b2f2e">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/jost-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/onest-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 @font-face{font-family:"Onest";src:url(/assets/fonts/onest-cyrillic.woff2) format("woff2");font-weight:100 900;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap}
 @font-face{font-family:"Onest";src:url(/assets/fonts/onest-latin.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap}
@@ -41,6 +44,7 @@
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;background:var(--paper)}
+@media (pointer:coarse){html.js-lock,html.js-lock body{touch-action:none;overscroll-behavior:none}}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 var(--text);scrollbar-color:var(--acc) var(--paper)}
 ::selection{background:var(--acc);color:var(--on-acc)}
 ::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:var(--paper)}::-webkit-scrollbar-thumb{background:var(--acc)}
@@ -253,8 +257,10 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
   .t-text{font-size:.95rem;max-width:none}
   .cells{grid-template-columns:minmax(0,1fr)}
   .cells li{grid-template-columns:1fr auto;align-items:center;column-gap:1rem;gap:.3rem 1rem;padding:.9rem 1rem}
-  .cells .gb{font-size:2.4rem;grid-column:1}.c-top{grid-column:1}.c-rows,.badge{display:none}
-  .c-price{grid-column:2;grid-row:1/3;font-size:1.5rem}
+  .cells .gb{font-size:2.4rem;grid-column:1}.c-top{grid-column:1}.badge{display:none}
+  .c-rows{grid-column:2;grid-row:2;align-self:start;justify-self:end;margin:0;padding:0}.c-rows::before,.c-rows div:nth-child(2),.c-rows dt{display:none}
+  .c-rows div{padding:0;border:0;font-size:.9375rem}.c-rows dd{font-weight:500;color:var(--ink-2)}
+  .c-price{grid-column:2;grid-row:1;align-self:end;font-size:1.5rem}
   .cells .btn{grid-column:1/3;min-height:40px}
   .dots{top:auto;bottom:max(14px,env(safe-area-inset-bottom));gap:0;transform:translateX(-50%) translateY(10px)}
   .dots.on{transform:translateX(-50%)}
@@ -263,6 +269,16 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
   .dots button.on{color:var(--ink)}
 }
 
+
+/* телефон и сенсорные экраны: убираем самое дорогое для GPU */
+@media (max-width:800px),(pointer:coarse){
+  .say{text-shadow:0 0 calc(var(--g)*14px) rgba(var(--glow-rgb),calc(var(--g)*.14))}
+  .stage.dive .scene{filter:blur(5px);transition:transform .8s cubic-bezier(.6,0,.4,1),opacity .7s ease}
+  .cells li{background:rgba(8,9,9,.8)}
+  .down svg{animation:none}
+  .btn--tg::before,.cells .btn::before{transition-duration:.25s}
+}
+@media (prefers-reduced-motion:reduce){.water i{animation:none}}
 /* без анимации: просто вертикальный список */
 html.flat .track{height:auto}
 html.flat .stage{position:relative;height:auto;overflow:visible;perspective:none;padding-top:64px}
@@ -341,55 +357,55 @@ html.flat .say,html.flat .mega{--g:0}
       <p data-ry="1" data-at="2.85" data-hold="1.15">Больше свободы в использовании трафика. Без недельных и 5-часовых ограничений.</p>
     </div>
     <div class="why-list">
-      <div class="why-row" data-ry="-1" data-at="2.95" data-hold="1.05"><span class="no"><i></i>01</span><div><h3>Весь трафик доступен сразу</h3><p>От 500 ГБ до 2 ТБ на весь срок подписки. Используйте трафик в удобном темпе, без промежуточных квот.</p></div></div>
-      <div class="why-row" data-ry="-1" data-at="3.10" data-hold="0.9"><span class="no"><i></i>02</span><div><h3>Один платёж на 30–60 дней</h3><p>Оплачивайте выбранный пакет один раз и пользуйтесь им до окончания срока или исчерпания трафика.</p></div></div>
-      <div class="why-row" data-ry="-1" data-at="3.25" data-hold="0.75"><span class="no"><i></i>03</span><div><h3>Чем больше, тем выгоднее</h3><p>Стоимость гигабайта снижается с увеличением пакета. Terra X20 выгоднее X5 примерно на 24% за гигабайт.</p></div></div>
+      <div class="why-row" data-ry="-1" data-at="2.95" data-hold="1.05"><span class="no"><i></i>01</span><div><h3>Весь трафик доступен сразу</h3><p>От <span data-f="gbmin">500 ГБ</span> до <span data-f="gbmax">2 ТБ</span> на весь срок подписки. Используйте трафик в удобном темпе, без промежуточных квот.</p></div></div>
+      <div class="why-row" data-ry="-1" data-at="3.10" data-hold="0.9"><span class="no"><i></i>02</span><div><h3>Один платёж на <span data-f="dayrange">30–60 дней</span></h3><p>Оплачивайте выбранный пакет один раз и пользуйтесь им до окончания срока или исчерпания трафика.</p></div></div>
+      <div class="why-row" data-ry="-1" data-at="3.25" data-hold="0.75"><span class="no"><i></i>03</span><div><h3>Чем больше, тем выгоднее</h3><p>Стоимость гигабайта снижается с увеличением пакета. Terra X20 выгоднее X5 примерно на <span data-f="saving">24%</span> за гигабайт.</p></div></div>
       <div class="why-row" data-ry="-1" data-at="3.40" data-hold="0.6"><span class="no"><i></i>04</span><div><h3>Все серверы включены</h3><p>Выбирайте любую доступную локацию и используйте общий запас трафика на всех серверах.</p></div></div>
     </div>
   </section>
 
   <!-- 2. Terra X5 -->
-  <section class="scene" aria-label="Terra X5">
+  <section class="scene" data-tid="9" aria-label="Terra X5">
     <div class="t-info" data-ry="1" data-at="4.60" data-hold="0.5">
       <h2 class="t-name">Terra <span>X5</span></h2>
       <p class="t-tag" data-at="4.70" data-hold="0.4" data-enter="0.35">Для повседневного использования.</p>
-      <p class="t-text" data-at="4.78" data-hold="0.32" data-enter="0.35">500 ГБ на 30 дней. Хватит на видео, учёбу, работу и обновления.</p>
-      <div class="t-price">49<small>Stars</small></div>
-      <dl class="t-meta"><div><dt>Срок</dt><dd>30 дней</dd></div><div><dt>В день</dt><dd>≈ 17 ГБ</dd></div><div><dt>За гигабайт</dt><dd>≈ 0,098 Stars</dd></div><div><dt>Видео Full HD</dt><dd>≈ 160 ч</dd></div></dl>
+      <p class="t-text" data-at="4.78" data-hold="0.32" data-enter="0.35"><span data-f="gb">500</span> ГБ на <span data-f="daysn">30 дней</span>. Хватит на видео, учёбу, работу и обновления.</p>
+      <div class="t-price"><span data-f="price">49</span><small>Stars</small></div>
+      <dl class="t-meta"><div><dt>Срок</dt><dd data-f="daysn">30 дней</dd></div><div><dt>В день</dt><dd data-f="perday">≈ 17 ГБ</dd></div><div><dt>За гигабайт</dt><dd data-f="pergb">≈ 0,098 Stars</dd></div><div><dt>Видео Full HD</dt><dd data-f="video">≈ 160 ч</dd></div></dl>
     </div>
     <div class="t-num" data-ry="-1" data-at="4.65" data-hold="0.45" data-glow="0.2">
       <span class="unit">ГБ</span>
-      <div class="mega" aria-label="500 гигабайт"><b class="e2" aria-hidden="true">500</b><b class="e1" aria-hidden="true">500</b><b class="m">500</b><i class="dot"></i></div>
+      <div class="mega" aria-label="500 гигабайт"><b class="e2" aria-hidden="true" data-f="gb">500</b><b class="e1" aria-hidden="true" data-f="gb">500</b><b class="m" data-f="gb">500</b><i class="dot"></i></div>
     </div>
   </section>
 
   <!-- 3. Terra X10 -->
-  <section class="scene" aria-label="Terra X10">
+  <section class="scene" data-tid="10" aria-label="Terra X10">
     <div class="t-info" data-ry="1" data-at="5.55" data-hold="0.5">
       <h2 class="t-name">Terra <span>X10</span></h2>
       <p class="t-tag" data-at="5.65" data-hold="0.4" data-enter="0.35">Для активного использования.</p>
-      <p class="t-text" data-at="5.73" data-hold="0.32" data-enter="0.35">1000 ГБ на 45 дней. Подойдёт для сериалов, игр и нескольких устройств.</p>
-      <div class="t-price">89<small>Stars</small></div>
-      <dl class="t-meta"><div><dt>Срок</dt><dd>45 дней</dd></div><div><dt>В день</dt><dd>≈ 22 ГБ</dd></div><div><dt>За гигабайт</dt><dd>≈ 0,089 Stars</dd></div><div><dt>Видео Full HD</dt><dd>≈ 330 ч</dd></div></dl>
+      <p class="t-text" data-at="5.73" data-hold="0.32" data-enter="0.35"><span data-f="gb">1000</span> ГБ на <span data-f="daysn">45 дней</span>. Подойдёт для сериалов, игр и нескольких устройств.</p>
+      <div class="t-price"><span data-f="price">89</span><small>Stars</small></div>
+      <dl class="t-meta"><div><dt>Срок</dt><dd data-f="daysn">45 дней</dd></div><div><dt>В день</dt><dd data-f="perday">≈ 22 ГБ</dd></div><div><dt>За гигабайт</dt><dd data-f="pergb">≈ 0,089 Stars</dd></div><div><dt>Видео Full HD</dt><dd data-f="video">≈ 330 ч</dd></div></dl>
     </div>
     <div class="t-num" data-ry="-1" data-at="5.60" data-hold="0.45" data-glow="0.2">
       <span class="unit">ГБ</span>
-      <div class="mega" aria-label="1000 гигабайт"><b class="e2" aria-hidden="true">1000</b><b class="e1" aria-hidden="true">1000</b><b class="m">1000</b><i class="dot"></i></div>
+      <div class="mega" aria-label="1000 гигабайт"><b class="e2" aria-hidden="true" data-f="gb">1000</b><b class="e1" aria-hidden="true" data-f="gb">1000</b><b class="m" data-f="gb">1000</b><i class="dot"></i></div>
     </div>
   </section>
 
   <!-- 4. Terra X20 -->
-  <section class="scene" aria-label="Terra X20">
+  <section class="scene" data-tid="11" aria-label="Terra X20">
     <div class="t-info" data-ry="1" data-at="6.50" data-hold="0.5">
       <h2 class="t-name">Terra <span>X20</span></h2>
       <p class="t-tag" data-at="6.60" data-hold="0.4" data-enter="0.35">Для большого запаса.</p>
-      <p class="t-text" data-at="6.68" data-hold="0.32" data-enter="0.35">2000 ГБ на 60 дней. Большой запас на два месяца, если трафика нужно много.</p>
-      <div class="t-price">149<small>Stars</small></div>
-      <dl class="t-meta"><div><dt>Срок</dt><dd>60 дней</dd></div><div><dt>В день</dt><dd>≈ 33 ГБ</dd></div><div><dt>За гигабайт</dt><dd>≈ 0,075 Stars</dd></div><div><dt>Видео Full HD</dt><dd>≈ 660 ч</dd></div></dl>
+      <p class="t-text" data-at="6.68" data-hold="0.32" data-enter="0.35"><span data-f="gb">2000</span> ГБ на <span data-f="daysn">60 дней</span>. Большой запас на два месяца, если трафика нужно много.</p>
+      <div class="t-price"><span data-f="price">149</span><small>Stars</small></div>
+      <dl class="t-meta"><div><dt>Срок</dt><dd data-f="daysn">60 дней</dd></div><div><dt>В день</dt><dd data-f="perday">≈ 33 ГБ</dd></div><div><dt>За гигабайт</dt><dd data-f="pergb">≈ 0,075 Stars</dd></div><div><dt>Видео Full HD</dt><dd data-f="video">≈ 660 ч</dd></div></dl>
     </div>
     <div class="t-num" data-ry="-1" data-at="6.55" data-hold="0.45" data-glow="0.2">
       <span class="unit">ГБ</span>
-      <div class="mega" aria-label="2000 гигабайт"><b class="e2" aria-hidden="true">2000</b><b class="e1" aria-hidden="true">2000</b><b class="m">2000</b><i class="dot"></i></div>
+      <div class="mega" aria-label="2000 гигабайт"><b class="e2" aria-hidden="true" data-f="gb">2000</b><b class="e1" aria-hidden="true" data-f="gb">2000</b><b class="m" data-f="gb">2000</b><i class="dot"></i></div>
     </div>
   </section>
 
@@ -397,25 +413,25 @@ html.flat .say,html.flat .mega{--g:0}
   <section class="scene s-end" id="end" aria-label="Все тарифы Terra">
     <h2 data-at="7.40" data-hold="1" data-enter="0.35">Три тарифа Terra</h2>
     <ul class="cells" id="cells">
-      <li style="--c:40,190,255" data-c="40,190,255" data-l="c" data-x="20" data-at="7.50" data-hold="1" data-enter="0.35" data-rx="1" data-soft="1">
+      <li style="--c:40,190,255" data-tid="9" data-c="40,190,255" data-l="c" data-x="20" data-at="7.50" data-hold="1" data-enter="0.35" data-rx="1" data-soft="1">
         <div class="c-top"><h3>Terra <span>X5</span></h3></div>
-        <div class="gb">500<small>ГБ</small></div>
-        <dl class="c-rows"><div><dt>Срок</dt><dd>30 дней</dd></div><div><dt>В день</dt><dd>≈ 17 ГБ</dd></div></dl>
-        <div class="c-price">49<small>Stars</small></div>
+        <div class="gb"><span data-f="gb">500</span><small>ГБ</small></div>
+        <dl class="c-rows"><div><dt>Срок</dt><dd data-f="daysn">30 дней</dd></div><div><dt>В день</dt><dd data-f="perday">≈ 17 ГБ</dd></div></dl>
+        <div class="c-price"><span data-f="price">49</span><small>Stars</small></div>
         <a class="btn" href="#" data-buy="9">Взять X5</a>
       </li>
-      <li class="main" style="--c:255,120,40" data-c="255,120,40" data-l="o" data-x="80" data-at="7.60" data-hold="1" data-enter="0.35" data-rx="1" data-soft="1">
+      <li class="main" style="--c:255,120,40" data-tid="10" data-c="255,120,40" data-l="o" data-x="80" data-at="7.60" data-hold="1" data-enter="0.35" data-rx="1" data-soft="1">
         <div class="c-top"><h3>Terra <span>X10</span></h3><span class="badge">Выгоднее</span></div>
-        <div class="gb">1000<small>ГБ</small></div>
-        <dl class="c-rows"><div><dt>Срок</dt><dd>45 дней</dd></div><div><dt>В день</dt><dd>≈ 22 ГБ</dd></div></dl>
-        <div class="c-price">89<small>Stars</small></div>
+        <div class="gb"><span data-f="gb">1000</span><small>ГБ</small></div>
+        <dl class="c-rows"><div><dt>Срок</dt><dd data-f="daysn">45 дней</dd></div><div><dt>В день</dt><dd data-f="perday">≈ 22 ГБ</dd></div></dl>
+        <div class="c-price"><span data-f="price">89</span><small>Stars</small></div>
         <a class="btn" href="#" data-buy="10">Взять X10</a>
       </li>
-      <li style="--c:160,90,255" data-c="160,90,255" data-l="v" data-x="50" data-at="7.70" data-hold="1" data-enter="0.35" data-rx="1" data-soft="1">
+      <li style="--c:160,90,255" data-tid="11" data-c="160,90,255" data-l="v" data-x="50" data-at="7.70" data-hold="1" data-enter="0.35" data-rx="1" data-soft="1">
         <div class="c-top"><h3>Terra <span>X20</span></h3></div>
-        <div class="gb">2000<small>ГБ</small></div>
-        <dl class="c-rows"><div><dt>Срок</dt><dd>60 дней</dd></div><div><dt>В день</dt><dd>≈ 33 ГБ</dd></div></dl>
-        <div class="c-price">149<small>Stars</small></div>
+        <div class="gb"><span data-f="gb">2000</span><small>ГБ</small></div>
+        <dl class="c-rows"><div><dt>Срок</dt><dd data-f="daysn">60 дней</dd></div><div><dt>В день</dt><dd data-f="perday">≈ 33 ГБ</dd></div></dl>
+        <div class="c-price"><span data-f="price">149</span><small>Stars</small></div>
         <a class="btn" href="#" data-buy="11">Взять X20</a>
       </li>
     </ul>
@@ -440,15 +456,52 @@ const BOT = "antivibecodingvpnbot";
 document.querySelectorAll("[data-buy]").forEach(a => a.href = "https://t.me/" + BOT + "?start=buy_" + a.dataset.buy);   // ссылка ведёт на тариф по его id
 document.querySelectorAll("[data-tg]").forEach(a => a.href = "https://t.me/" + BOT);
 
+/* актуальные тарифы: цены, объёмы и сроки берутся из data.json (его пишет refresh.mjs), в HTML лежат только запасные значения */
+const fmtN = n => String(n).replace(".", ",");
+const plDays = n => n + " " + (n % 10 === 1 && n % 100 !== 11 ? "день" : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? "дня" : "дней");
+const fmtGb = g => g >= 1000 ? fmtN(+(g / 1000).toFixed(1)) + " ТБ" : g + " ГБ";
+function applyData(d) {
+  if (!d || !Array.isArray(d.tariffs)) return;
+  const T = {};
+  for (const id of [9, 10, 11]) {
+    const t = d.tariffs.find(x => x && x.id === id), q = t && Array.isArray(t.quotas) && t.quotas.find(x => x && x.type === "lifetime");
+    if (!t || !q || !Number.isInteger(t.price_stars) || t.price_stars <= 0 || !Number.isInteger(t.duration_days) || t.duration_days <= 0 || !(q.limit_bytes > 0)) continue;
+    const gb = Math.round(q.limit_bytes / 1e9), per = t.price_stars / gb;
+    T[id] = { gb, days: t.duration_days, price: t.price_stars, per,
+      v: { gb: String(gb), daysn: plDays(t.duration_days), price: String(t.price_stars), perday: "≈ " + fmtN(Math.round(gb / t.duration_days)) + " ГБ",
+           pergb: "≈ " + fmtN(per.toFixed(3)) + " Stars", video: "≈ " + Math.round(gb / 3.05 / 10) * 10 + " ч" } };
+  }
+  for (const id in T) {
+    document.querySelectorAll('[data-tid="' + id + '"]').forEach(box => {
+      box.querySelectorAll("[data-f]").forEach(el => { const v = T[id].v[el.dataset.f]; if (v !== undefined && el.textContent !== v) el.textContent = v; });
+      box.querySelectorAll(".mega").forEach(m => m.setAttribute("aria-label", T[id].gb + " гигабайт"));
+    });
+  }
+  const all = Object.values(T), set = (k, v) => document.querySelectorAll('[data-f="' + k + '"]').forEach(el => { if (el.textContent !== v) el.textContent = v; });
+  if (all.length) {
+    set("gbmin", fmtGb(Math.min(...all.map(x => x.gb)))); set("gbmax", fmtGb(Math.max(...all.map(x => x.gb))));
+    const dmin = Math.min(...all.map(x => x.days)), dmax = Math.max(...all.map(x => x.days));
+    set("dayrange", dmin === dmax ? plDays(dmin) : dmin + "–" + plDays(dmax));
+  }
+  if (T[9] && T[11]) set("saving", Math.max(0, Math.round((1 - T[11].per / T[9].per) * 100)) + "%");
+}
+function loadData() {
+  const get = u => fetch(u, { cache: "no-store" }).then(r => r.ok ? r.json() : Promise.reject());
+  get("data/data.json").catch(() => get("data.json")).then(applyData).catch(() => {});   // не вышло: остаются значения из HTML
+}
+loadData(); setInterval(loadData, 10 * 60 * 1000);
+
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!reduce) {
-  history.scrollRestoration = "manual"; scrollTo(0, 0);
+  history.scrollRestoration = "manual"; scrollTo(0, 0); document.documentElement.classList.add("js-lock");
   document.documentElement.style.overflow = "hidden";
   setTimeout(() => { document.documentElement.style.overflow = ""; }, 6800);
 }
 if (reduce) {
   document.documentElement.classList.add("flat");
 } else {
+  const MOB = matchMedia("(max-width:800px),(pointer:coarse)").matches;   // телефон: без блюра и тяжёлых теней
+  let VH = innerHeight, VW = innerWidth;
   const track = document.getElementById("track"), stage = document.getElementById("stage"),
         dots = document.getElementById("dots"),
         dotBtns = [...dots.querySelectorAll("button")];
@@ -504,7 +557,7 @@ if (reduce) {
     cur += diff * (1 - Math.exp(-dt / (anim ? .12 : TAU)));
     { const mt = onlyEnd ? 0 : 1; maskV += (mt - maskV) * (1 - Math.exp(-dt / .35)); if (Math.abs(mt - maskV) < .004) maskV = mt; }
     for (const k in HV) { const tg = k === hoverL ? 1 : 0; HV[k] += (tg - HV[k]) * (1 - Math.exp(-dt / .38)); if (Math.abs(tg - HV[k]) < .004) HV[k] = tg; }
-    const lean = Math.max(-5, Math.min(5, (target - cur) * .006));   // наклон камеры по скорости
+    const lean = MOB ? 0 : Math.max(-5, Math.min(5, (target - cur) * .006));   // наклон камеры по скорости
     for (const sc of scenes) sc.style.transform = lean ? `rotateX(${lean.toFixed(2)}deg)` : "";
     if (Math.abs(target - cur) < .3) { cur = target; for (const sc of scenes) sc.style.transform = ""; }
     frame();
@@ -513,9 +566,9 @@ if (reduce) {
   function kick() { if (!running) { running = true; requestAnimationFrame(tick); } }
 
   function frame() {
-    const vh = innerHeight, pos = cur / vh;
+    const vh = VH, pos = cur / vh;
     stage.classList.toggle("calm", pos > 7.25);
-    if (onlyEnd && pos < 6.75) { onlyEnd = false; kick(); }
+    if (onlyEnd && pos < 6.9) { onlyEnd = false; kick(); }   // вернулись к X20 свайпом назад: остановка 6.75 не меньше 6.75, поэтому порог с запасом (прыжок «К тарифам» стартует с 7.05)
     let lightMax = 0;
     for (const it of items) {
       const d = pos - it.at;
@@ -542,11 +595,11 @@ if (reduce) {
       e._v = 1;
       e.style.opacity = op.toFixed(3);
       e.style.transform = `translate3d(0,${y.toFixed(1)}px,${z.toFixed(1)}px)` + (it.rx ? ` rotateX(${(rx * -50).toFixed(1)}deg)` : "") + (ry ? ` rotateY(${ry.toFixed(1)}deg)` : "");
+      if (MOB && !it.mega) bl *= .35;   // на телефоне весь текст, кроме заголовка и крупных чисел, размывается слабее
       e.style.filter = bl > .4 ? `blur(${bl.toFixed(1)}px)` : "";
       if (it.glow || it.mega) {
         const tgt = it.mega || e;
         tgt.style.setProperty("--g", g.toFixed(3));
-        tgt.style.setProperty("--sp", (sp + .06).toFixed(3));
         if (g > lightMax) lightMax = g;
       }
     }
@@ -571,22 +624,26 @@ if (reduce) {
       if (!el._on) { el.style.display = ""; el._on = true; }
       el.style.opacity = o.toFixed(3);
     }
-    stage.style.setProperty("--glow-rgb", L.raw.map(v => Math.round(v * .6 + 255 * .4)).join(","));
-    stage.style.setProperty("--acc", `rgb(${L.raw.map(v => Math.round(v * .55 + 255 * .45)).join(",")})`);
+    const glowV = L.raw.map(v => Math.round(v * .6 + 255 * .4)).join(","), accV = `rgb(${L.raw.map(v => Math.round(v * .55 + 255 * .45)).join(",")})`;
+    if (glowV !== stage._gl) { stage._gl = glowV; stage.style.setProperty("--glow-rgb", glowV); }   // меняем наследуемые переменные только когда цвет сдвинулся
+    if (accV !== stage._ac) { stage._ac = accV; stage.style.setProperty("--acc", accV); }
     // индикатор тарифов
     dots.classList.toggle("on", pos > 4.3 && pos < 7.0);
     const centres = [4.6, 5.55, 6.5];
     dotBtns.forEach((b, i) => b.classList.toggle("on", Math.abs(pos - centres[i] - .1) < .5));
   }
 
-  addEventListener("resize", () => { cur = scrollY; frame(); });
+  addEventListener("resize", () => {
+    if (innerWidth === VW && Math.abs(innerHeight - VH) < 160) return;   // адресная строка скрылась/показалась
+    const p = cur / VH; VW = innerWidth; VH = innerHeight; setH(); cur = p * VH; scrollTo(0, cur); frame();
+  });
   addEventListener("scroll", kick, { passive: true });
   stage.querySelectorAll(".cells li").forEach(li => {
     li.addEventListener("mouseenter", () => { if (li.style.pointerEvents !== "auto") return; hovered = li; hoverL = li.dataset.l; kick(); });
     li.addEventListener("mouseleave", () => { if (hovered === li) { hovered = null; hoverL = null; } kick(); });
   });
-  function setH() { track.style.height = (8.9 + 1) * innerHeight + "px"; }
-  setH(); addEventListener("resize", setH);
+  function setH() { track.style.height = (8.9 + 1) * VH + "px"; }
+  setH();
   frame();
 
   /* постраничная прокрутка: один жест подводит к следующему объекту и проигрывает его анимацию */
@@ -595,9 +652,9 @@ if (reduce) {
   let anim = false, blockUntil = 0, idleTimer = 0;
   const ease = t => t < .5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;   // медленный старт и мягкая остановка
   function goTo(pos) {
-    const from = scrollY, to = Math.round(pos * innerHeight), dist = Math.abs(to - from);
+    const from = scrollY, to = Math.round(pos * VH), dist = Math.abs(to - from);
     if (dist < 2) return;
-    anim = true; const dur = Math.min(2200, 1100 + dist / innerHeight * 500), st = performance.now();
+    anim = true; const dur = Math.min(2200, 1100 + dist / VH * 500), st = performance.now();
     (function step(now) {
       const k = Math.min(1, (now - st) / dur);
       scrollTo(0, from + (to - from) * ease(k));
@@ -606,7 +663,7 @@ if (reduce) {
   }
   function stepBy(dir) {
     if (anim || performance.now() - t0 < 6800) return;
-    const pos = scrollY / innerHeight;
+    const pos = scrollY / VH;
     const next = dir > 0 ? STOPS.find(v => v > pos + .06) : [...STOPS].reverse().find(v => v < pos - .06);
     if (next !== undefined) goTo(next);
   }
@@ -620,7 +677,6 @@ if (reduce) {
   }, { passive: false });
   let ty = null;
   addEventListener("touchstart", e => { ty = e.touches[0].clientY; }, { passive: true });
-  addEventListener("touchmove", e => { e.preventDefault(); }, { passive: false });
   addEventListener("touchend", e => {
     if (ty === null) return; const dy = ty - e.changedTouches[0].clientY; ty = null;
     if (Math.abs(dy) > 36) stepBy(dy);
@@ -638,7 +694,7 @@ if (reduce) {
     if (anim) return; clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
       if (anim || performance.now() - t0 < 6800) return;
-      const pos = scrollY / innerHeight, near = STOPS.reduce((a, b) => Math.abs(b - pos) < Math.abs(a - pos) ? b : a);
+      const pos = scrollY / VH, near = STOPS.reduce((a, b) => Math.abs(b - pos) < Math.abs(a - pos) ? b : a);
       goTo(near);
     }, 320);
   }, { passive: true });
@@ -672,7 +728,7 @@ if (reduce) {
   const down = document.getElementById("down");
   setTimeout(() => down.classList.remove("first"), 7500);
   down.addEventListener("click", e => { e.preventDefault(); stepBy(1); });
-  const hideDown = () => { const p = scrollY / innerHeight; down.classList.toggle("show", scrollY < 20 || (p > 7.45 && p < 8.1)); };
+  const hideDown = () => { const p = scrollY / VH; down.classList.toggle("show", scrollY < 20 || (p > 7.45 && p < 8.1)); };
   addEventListener("scroll", hideDown, { passive: true }); addEventListener("resize", hideDown);
 
   /* «К тарифам»: вспышка света, сцена проваливается в неё, дальше появляются только карточки */
@@ -681,10 +737,10 @@ if (reduce) {
     e.preventDefault();
     if (anim || performance.now() - t0 < 6800) return;
     const end = 7.7;                       // остановка с карточками тарифов
-    if (scrollY / innerHeight > end - .6) { goTo(end); return; }
+    if (scrollY / VH > end - .6) { goTo(end); return; }
     anim = true; stage.classList.add("dive"); veil.classList.add("on");
     setTimeout(() => {
-      const y = Math.round((end - .65) * innerHeight);
+      const y = Math.round((end - .65) * VH);
       onlyEnd = true; maskV = 0;                 // старые сцены не показываем
       scrollTo(0, y); cur = y; frame();
       stage.classList.remove("dive"); veil.classList.remove("on");
