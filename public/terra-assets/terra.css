@@ -28,7 +28,7 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
 .btn--small:hover{background:var(--ink);color:var(--paper)}
 .btn:active{transform:translateY(1px)}
 
-.top{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 var(--pad);background:linear-gradient(rgba(0,0,0,.55),transparent);animation:lightIn .6s ease .1s both}
+.top{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 var(--pad);background:linear-gradient(rgba(0,0,0,.55),transparent);animation:lightIn .9s ease 2.4s both}
 .brand{font:600 1.25rem var(--display);letter-spacing:-.01em;text-decoration:none}
 
 /* ---------- сцена ---------- */
