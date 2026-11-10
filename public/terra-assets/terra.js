@@ -9,14 +9,15 @@ document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random(
   if (!IS_MOB) lg.style.setProperty("--lx", "50");   // свет не тянется к блокам: общий центр, цвет остаётся по сцене
   lg.querySelectorAll(".water i").forEach(r => {
     if (IS_MOB) { r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--A", (7 + Math.random() * 12).toFixed(1) + "deg"); return; }
-    r.style.setProperty("--Dr", (1 + Math.random() * 1.8).toFixed(1) + "vw");
+    r.style.setProperty("--Dr", (3 + Math.random() * 4).toFixed(1) + "vw");
+    r.style.setProperty("--d", (6 + Math.random() * 6).toFixed(1) + "s"); r.style.setProperty("--sl", (-Math.random() * 12).toFixed(1) + "s");   // у каждого луча свой темп и фаза: движение не синхронное
     // компьютер: лучи не привязаны к блокам. Расходятся по всей ширине с небольшим случайным сдвигом, слегка веером наружу и качаются слабо
     const x = parseFloat(r.style.getPropertyValue("--x")) || 50;
     r.style.setProperty("--dx", (layerShift + Math.random() * 6 - 3).toFixed(1) + "vw");
     r.style.setProperty("--rf", ((x - 45) / 45 * 9 + Math.random() * 6 - 3).toFixed(1) + "deg");
-    r.style.setProperty("--A", (3 + Math.random() * 3).toFixed(1) + "deg");
+    r.style.setProperty("--A", (6 + Math.random() * 6).toFixed(1) + "deg");
   }); });
-document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (16 + Math.random() * 14).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 30).toFixed(1) + "s"); });
+document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (11 + Math.random() * 10).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 30).toFixed(1) + "s"); });
 
 let introMs = 3800;   // сколько длится вступление; касание или клавиша обрывают его раньше
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;

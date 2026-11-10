@@ -54,10 +54,10 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
 .water i::before{content:"";position:absolute;inset:0;transform-origin:50% 0;
   background:linear-gradient(to bottom,rgba(var(--lc),.7) 0%,rgba(var(--lc),.5) 15%,rgba(var(--lc),.3) 33%,rgba(var(--lc),.15) 52%,rgba(var(--lc),.06) 70%,rgba(var(--lc),.015) 86%,rgba(var(--lc),0) 100%);
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 34%,#000 66%,transparent);mask-image:linear-gradient(90deg,transparent,#000 34%,#000 66%,transparent);   /* мягкие края вместо размытия: луч читается как луч и стоит дешевле блюра */
-  opacity:.6;animation:sway var(--d) ease-in-out infinite alternate,glint var(--gd,9s) linear var(--gl,0s) infinite;will-change:transform,opacity}
-@keyframes sway{from{transform:translateX(calc(var(--Dr,0vw)*-1)) rotate(calc(var(--A,6deg)*-1)) scaleX(.75)}to{transform:translateX(var(--Dr,0vw)) rotate(var(--A,6deg)) scaleX(1.25)}}   /* лучи постоянно плывут: качаются и смещаются в стороны */
+  opacity:.6;animation:sway var(--d) ease-in-out var(--sl,0s) infinite alternate,glint var(--gd,9s) linear var(--gl,0s) infinite;will-change:transform,opacity}
+@keyframes sway{from{transform:translateX(calc(var(--Dr,0vw)*-1)) rotate(calc(var(--A,6deg)*-1)) scaleX(.6)}to{transform:translateX(var(--Dr,0vw)) rotate(var(--A,6deg)) scaleX(1.4)}}   /* лучи постоянно плывут: качаются и смещаются в стороны */
 /* случайные вспышки: у каждого луча своя длительность и сдвиг (их выставляет скрипт), неровные ступени дают нерегулярное мерцание */
-@keyframes glint{0%{opacity:.5}30%{opacity:.95}62%{opacity:.6}100%{opacity:.5}}   /* мягкое «дыхание», редкое и без резких вспышек */
+@keyframes glint{0%{opacity:.4}30%{opacity:1}62%{opacity:.55}100%{opacity:.4}}   /* мягкое «дыхание», редкое и без резких вспышек */
 @keyframes lightIn{from{opacity:0}to{opacity:1}}
 
 .scene{inset:64px calc(var(--pad) + 36px) 0 var(--pad);display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:1fr;align-items:center;column-gap:calc(var(--u)*2);pointer-events:none;transform-style:preserve-3d}
