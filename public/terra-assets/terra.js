@@ -2,6 +2,9 @@ const BOT = "antivibecodingvpnbot";
 document.querySelectorAll("[data-buy]").forEach(a => a.href = "https://t.me/" + BOT + "?start=buy_" + a.dataset.buy);   // ссылка ведёт на тариф по его id
 document.querySelectorAll("[data-tg]").forEach(a => a.href = "https://t.me/" + BOT);
 
+/* лучи: у каждого свой случайный темп вспышек и сдвиг, чтобы они не мигали в унисон */
+document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (5 + Math.random() * 9).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 14).toFixed(1) + "s"); });
+
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!reduce) {
   history.scrollRestoration = "manual"; scrollTo(0, 0); document.documentElement.classList.add("js-lock");

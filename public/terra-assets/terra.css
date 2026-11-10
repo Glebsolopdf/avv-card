@@ -49,8 +49,12 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spac
      rgba(var(--lc),.13) 0%, rgba(var(--lc),.08) 30%, rgba(var(--lc),.03) 60%, rgba(var(--lc),0) 100%)}
 .water{position:absolute;inset:0;pointer-events:none;overflow:hidden;transform:translateX(calc((var(--lx) - 50)*.5vw))}
 .water i{position:absolute;top:-12%;left:var(--x);width:var(--w);height:125%;transform-origin:50% 0;transform:rotate(var(--r));
-  background:linear-gradient(to bottom,rgba(var(--lc),.55) 0%,rgba(var(--lc),.42) 15%,rgba(var(--lc),.27) 33%,rgba(var(--lc),.14) 52%,rgba(var(--lc),.055) 70%,rgba(var(--lc),.015) 86%,rgba(var(--lc),0) 100%);filter:blur(24px);opacity:.75;animation:sway var(--d) ease-in-out infinite alternate;will-change:transform,opacity}
-@keyframes sway{from{transform:rotate(calc(var(--r) - 6deg)) scaleX(.75);opacity:.3}to{transform:rotate(calc(var(--r) + 6deg)) scaleX(1.25);opacity:.85}}
+  background:linear-gradient(to bottom,rgba(var(--lc),.7) 0%,rgba(var(--lc),.5) 15%,rgba(var(--lc),.3) 33%,rgba(var(--lc),.15) 52%,rgba(var(--lc),.06) 70%,rgba(var(--lc),.015) 86%,rgba(var(--lc),0) 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 34%,#000 66%,transparent);mask-image:linear-gradient(90deg,transparent,#000 34%,#000 66%,transparent);   /* мягкие края вместо размытия: луч читается как луч и стоит дешевле блюра */
+  opacity:.6;animation:sway var(--d) ease-in-out infinite alternate,glint var(--gd,9s) linear var(--gl,0s) infinite;will-change:transform,opacity}
+@keyframes sway{from{transform:rotate(calc(var(--r) - 6deg)) scaleX(.75)}to{transform:rotate(calc(var(--r) + 6deg)) scaleX(1.25)}}
+/* случайные вспышки: у каждого луча своя длительность и сдвиг (их выставляет скрипт), неровные ступени дают нерегулярное мерцание */
+@keyframes glint{0%{opacity:.12}9%{opacity:.95}17%{opacity:.3}33%{opacity:.7}41%{opacity:.1}58%{opacity:1}66%{opacity:.35}82%{opacity:.8}100%{opacity:.12}}
 @keyframes lightIn{from{opacity:0}to{opacity:1}}
 
 .scene{inset:64px calc(var(--pad) + 36px) 0 var(--pad);display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:1fr;align-items:center;column-gap:calc(var(--u)*2);pointer-events:none;transform-style:preserve-3d}
