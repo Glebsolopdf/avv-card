@@ -70,7 +70,7 @@ if (reduce) {
   function tick(t) {
     const dt = Math.min(.05, (t - (last || t)) / 1000); last = t;
     const target = scrollY, diff = target - cur;
-    cur += diff * (1 - Math.exp(-dt / (anim ? .12 : TAU)));
+    cur += diff * (1 - Math.exp(-dt / (anim ? .045 : TAU)));
     { const mt = onlyEnd ? 0 : 1; maskV += (mt - maskV) * (1 - Math.exp(-dt / .35)); if (Math.abs(mt - maskV) < .004) maskV = mt; }
     for (const k in HV) { const tg = k === hoverL ? 1 : 0; HV[k] += (tg - HV[k]) * (1 - Math.exp(-dt / .38)); if (Math.abs(tg - HV[k]) < .004) HV[k] = tg; }
     const lean = MOB ? 0 : Math.max(-5, Math.min(5, (target - cur) * .006));   // наклон камеры по скорости
@@ -182,11 +182,11 @@ if (reduce) {
   addEventListener("pointerdown", skipIntro, { passive: true });
   addEventListener("keydown", skipIntro);
   let anim = false, blockUntil = 0, idleTimer = 0, animTo = null, tok = 0, hard = false, lastStep = 0;   // hard: переход «К тарифам» нельзя перебить
-  const ease = t => t < .5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;   // медленный старт и мягкая остановка
+  const ease = t => 1 - Math.pow(1 - t, 3);   // старт сразу на скорости, мягкая остановка: страница реагирует с первого кадра жеста
   function goTo(pos) {
     const from = scrollY, to = Math.round(pos * VH), dist = Math.abs(to - from);
     if (dist < 2) return;
-    anim = true; animTo = to; const my = ++tok, dur = Math.min(2200, 1100 + dist / VH * 500), st = performance.now();
+    anim = true; animTo = to; const my = ++tok, dur = Math.min(1500, 650 + dist / VH * 300), st = performance.now();
     (function step(now) {
       if (my !== tok) return;                         // начался другой переход: этот отменён
       const k = Math.min(1, (now - st) / dur);
@@ -214,10 +214,10 @@ if (reduce) {
   let ty = null;
   let fired = false;
   addEventListener("touchstart", e => { ty = e.touches[0].clientY; fired = false; }, { passive: true });
-  addEventListener("touchmove", e => {                 // переход стартует, как только палец прошёл ~26px, не дожидаясь отрыва
+  addEventListener("touchmove", e => {                 // переход стартует, как только палец прошёл ~12px, не дожидаясь отрыва
     if (ty === null || fired) return;
     const dy = ty - e.touches[0].clientY;
-    if (Math.abs(dy) > 26) { fired = true; stepBy(dy); }
+    if (Math.abs(dy) > 12) { fired = true; stepBy(dy); }
   }, { passive: true });
   addEventListener("touchend", e => {
     if (ty === null) return; const dy = ty - e.changedTouches[0].clientY; ty = null;
