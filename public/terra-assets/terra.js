@@ -5,7 +5,7 @@ document.querySelectorAll("[data-tg]").forEach(a => a.href = "https://t.me/" + B
 /* лучи: у каждого свой случайный темп вспышек и сдвиг, чтобы они не мигали в унисон */
 const IS_MOB = matchMedia("(max-width:800px),(pointer:coarse)").matches;
 document.documentElement.classList.toggle("mob", IS_MOB);
-document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random() * 8 - 4;
+document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random() * 8 - 4, layerTilt = (Math.random() < .5 ? -1 : 1) * (9 + Math.random() * 7);   // на сцену один общий наклон: лучи смотрят в одну сторону
   if (!IS_MOB) lg.style.setProperty("--lx", "50");   // свет не тянется к блокам: общий центр, цвет остаётся по сцене
   lg.querySelectorAll(".water i").forEach(r => {
     if (IS_MOB) { r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--A", (7 + Math.random() * 12).toFixed(1) + "deg"); return; }
@@ -14,8 +14,8 @@ document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random(
     // компьютер: лучи не привязаны к блокам. Расходятся по всей ширине с небольшим случайным сдвигом, слегка веером наружу и качаются слабо
     const x = parseFloat(r.style.getPropertyValue("--x")) || 50;
     r.style.setProperty("--dx", (layerShift + Math.random() * 6 - 3).toFixed(1) + "vw");
-    r.style.setProperty("--rf", ((x - 45) / 45 * 9 + Math.random() * 6 - 3).toFixed(1) + "deg");
-    r.style.setProperty("--A", (6 + Math.random() * 6).toFixed(1) + "deg");
+    r.style.setProperty("--rf", (layerTilt + Math.random() * 5 - 2.5).toFixed(1) + "deg");
+    r.style.setProperty("--A", (4 + Math.random() * 4).toFixed(1) + "deg");
   }); });
 /* порядок выхода лучей: ближайший к центру пробивается первым, остальные следом, по очереди */
 document.querySelectorAll(".lg").forEach(lg => {
