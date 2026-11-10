@@ -224,12 +224,12 @@
 <script src="js/content.js?v=88"></script>
 <script src="js/app.js?v=88"></script>
 <style id="terra-go-css">
-/* переход на /terra: тёмный круг вырастает из точки нажатия, в случайных местах выстреливают цветные лучи; всё укладывается в ~1,2 с */
+/* переход на /terra: тёмный круг вырастает из точки нажатия, в случайных местах выстреливают белые лучи и в конце уходят вверх; всё укладывается в ~1,4 с */
 .terra-go{position:fixed;inset:0;z-index:99999;background:#000;pointer-events:none;visibility:hidden;overflow:hidden;clip-path:circle(0 at var(--x,50%) var(--y,50%))}
 .terra-go i{position:absolute;top:-15%;height:140%;transform-origin:50% 0;opacity:0;background:linear-gradient(to bottom,rgba(var(--c),.9),rgba(var(--c),.5) 22%,rgba(var(--c),.18) 52%,rgba(var(--c),0));-webkit-mask-image:linear-gradient(90deg,transparent,#000 34%,#000 66%,transparent);mask-image:linear-gradient(90deg,transparent,#000 34%,#000 66%,transparent)}
 .terra-go.on{visibility:visible;pointer-events:auto;clip-path:circle(150vmax at var(--x,50%) var(--y,50%));transition:clip-path .7s cubic-bezier(.65,0,.25,1)}
-.terra-go.flash i{animation:terra-beam var(--d) cubic-bezier(.2,.7,.2,1) var(--t) forwards}
-@keyframes terra-beam{0%{opacity:0;transform:rotate(var(--r)) scale(.7,.15)}28%{opacity:1}100%{opacity:.4;transform:rotate(calc(var(--r) + var(--s))) scale(1,1)}}
+.terra-go.flash i{animation:terra-beam var(--d) ease-in-out var(--t) forwards}
+@keyframes terra-beam{0%{opacity:0;transform:rotate(var(--r)) scale(.7,.15)}34%{opacity:1;transform:rotate(calc(var(--r) + var(--s)*.6)) scale(1,1)}58%{opacity:.85;transform:rotate(calc(var(--r) + var(--s))) scale(1,1)}100%{opacity:0;transform:rotate(calc(var(--r) + var(--s))) scale(.7,0)}}   /* вылетает вниз, чуть держится и втягивается обратно вверх */
 </style>
 <script id="terra-go-js">
 (function(){
@@ -237,12 +237,12 @@
   var ov=document.createElement('div'); ov.className='terra-go'; ov.setAttribute('aria-hidden','true'); document.body.appendChild(ov);
   var warm=false; function prefetch(){ if(warm){return;} warm=true; var l=document.createElement('link'); l.rel='prefetch'; l.href=a.href; document.head.appendChild(l); }
   a.addEventListener('pointerenter',prefetch,{passive:true}); a.addEventListener('touchstart',prefetch,{passive:true});
-  var COL=['255,255,255','40,190,255','255,120,40','160,90,255'];
+  var COL=['255,255,255'];
   function beams(){                                    // лучи в случайных местах, углах и цветах, вылетают по очереди
     ov.textContent='';
     for(var k=0;k<9;k++){
       var b=document.createElement('i'), w=7+Math.random()*13, r=(Math.random()*70-35), s=(Math.random()*24-12);
-      b.style.cssText='left:'+(Math.random()*110-5-w/2).toFixed(1)+'%;width:'+w.toFixed(1)+'vw;--c:'+COL[(Math.random()*4)|0]+';--r:'+r.toFixed(1)+'deg;--s:'+s.toFixed(1)+'deg;--d:'+(.55+Math.random()*.4).toFixed(2)+'s;--t:'+(Math.random()*.45).toFixed(2)+'s';
+      b.style.cssText='left:'+(Math.random()*110-5-w/2).toFixed(1)+'%;width:'+w.toFixed(1)+'vw;--c:'+COL[(Math.random()*4)|0]+';--r:'+r.toFixed(1)+'deg;--s:'+s.toFixed(1)+'deg;--d:'+(.8+Math.random()*.25).toFixed(2)+'s;--t:'+(Math.random()*.3).toFixed(2)+'s';
       ov.appendChild(b);
     }
   }
@@ -253,8 +253,8 @@
     var r=a.getBoundingClientRect(), x=e.clientX||r.left+r.width/2, y=e.clientY||r.top+r.height/2;
     ov.style.setProperty('--x',x+'px'); ov.style.setProperty('--y',y+'px');
     ov.classList.add('on');
-    setTimeout(function(){ov.classList.add('flash');},250);
-    setTimeout(function(){location.href=a.href;},1150);
+    setTimeout(function(){ov.classList.add('flash');},200);
+    setTimeout(function(){location.href=a.href;},1300);
   });
   addEventListener('pageshow',function(e){if(e.persisted){ov.classList.remove('on','flash');}});
 })();
