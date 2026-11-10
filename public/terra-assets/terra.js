@@ -257,7 +257,8 @@ if (reduce) {
     tgTimers.push(setTimeout(() => tgEl.classList.add("draw"), 600));
     tgTimers.push(setTimeout(() => tgEl.classList.add("fill"), 1650));
     tgTimers.push(setTimeout(() => tgEl.classList.add("blink"), 2050));
-    tgTimers.push(setTimeout(() => { tgEl.classList.add("open"); location.href = a.href; }, 1300));   // переход не ждёт конца анимации логотипа; кнопка «Открыть Telegram» на случай, если приложение само не открылось
+    tgTimers.push(setTimeout(() => { location.href = a.href; }, 1300));       // переход не ждёт конца анимации логотипа
+    tgTimers.push(setTimeout(() => tgEl.classList.add("open"), 3000));        // кнопка «Открыть Telegram» через 3 секунды, на случай если приложение само не открылось
     tgTimers.push(setTimeout(tgReset, 10000));                                                       // через 10 секунд экран перехода уходит сам
   }
   function tgReset() {
