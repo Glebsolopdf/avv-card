@@ -8,7 +8,10 @@ document.documentElement.classList.toggle("mob", IS_MOB);
 document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random() * 8 - 4, layerTilt = (Math.random() < .5 ? -1 : 1) * (9 + Math.random() * 7);   // на сцену один общий наклон: лучи смотрят в одну сторону
   if (!IS_MOB) lg.style.setProperty("--lx", "50");   // свет не тянется к блокам: общий центр, цвет остаётся по сцене
   lg.querySelectorAll(".water i").forEach(r => {
-    if (IS_MOB) { r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--A", (7 + Math.random() * 12).toFixed(1) + "deg"); return; }
+    if (IS_MOB) {   // телефон: тоже один общий наклон на сцену и на заголовок, лучи не пересекаются крестом
+      const t = (layerTilt + Math.random() * 5 - 2.5).toFixed(1) + "deg";
+      r.style.setProperty("--r", t); r.style.setProperty("--rf", t); r.style.setProperty("--A", (4 + Math.random() * 4).toFixed(1) + "deg"); return;
+    }
     r.style.setProperty("--Dr", (3 + Math.random() * 4).toFixed(1) + "vw");
     r.style.setProperty("--d", (6 + Math.random() * 6).toFixed(1) + "s"); r.style.setProperty("--sl", (-Math.random() * 12).toFixed(1) + "s");   // у каждого луча свой темп и фаза: движение не синхронное
     // компьютер: лучи не привязаны к блокам. Расходятся по всей ширине с небольшим случайным сдвигом, слегка веером наружу и качаются слабо
