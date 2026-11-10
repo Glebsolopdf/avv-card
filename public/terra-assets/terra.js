@@ -19,13 +19,6 @@ document.querySelectorAll(".lg").forEach(lg => { const layerShift = Math.random(
   }); });
 document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (11 + Math.random() * 10).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 30).toFixed(1) + "s"); });
 
-/* точка схода для букв «Terra»: центр экрана; у каждой буквы transform-origin смотрит на неё, поэтому при увеличении они разлетаются от камеры, как в перспективе */
-{
-  const cs = [...document.querySelectorAll(".mega .m .ch")];
-  cs.forEach(c => { c.style.animation = "none"; });
-  const rs = cs.map(c => c.getBoundingClientRect());
-  cs.forEach((c, k) => { c.style.transformOrigin = (innerWidth / 2 - rs[k].left).toFixed(1) + "px " + (innerHeight / 2 - rs[k].top).toFixed(1) + "px"; c.style.animation = ""; });
-}
 let introMs = 3800;   // сколько длится вступление; касание или клавиша обрывают его раньше
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!reduce) {
