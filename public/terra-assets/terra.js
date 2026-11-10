@@ -53,7 +53,7 @@ if (reduce) {
   function lighting(pos) {
     let i = 0; while (i < PRE.length - 2 && pos > PRE[i + 1].at) i++;
     const a = PRE[i], b = PRE[i + 1];
-    const t = sm(Math.min(1, Math.max(0, ((pos - a.at) / (b.at - a.at) - .5) / .4 + .5)));
+    const t = sm(Math.min(1, Math.max(0, ((pos - a.at) / (b.at - a.at) - .5) / .8 + .5)));
     const c = a.c.map((v, k) => Math.round(v + (b.c[k] - v) * t));
     return { c: c.join(","), x: a.x + (b.x - a.x) * t, raw: c, la: a.l, lb: b.l, t };
   }
@@ -62,6 +62,7 @@ if (reduce) {
   let cur = scrollY, last = 0, running = false;
   // наведение: у каждого слоя света свой вес, он плавно догоняет цель, поэтому смена карточек не прыгает
   const HV = { c: 0, o: 0, v: 0 }, HVCOL = { c: [40, 190, 255], o: [255, 120, 40], v: [160, 90, 255] };
+  const WT = { w: 1, c: 0, o: 0, v: 0 }; let wtBusy = false;   // сглаженные веса слоёв света: лучи перетекают с места на место, даже если страницу перебросило
   let hoverL = null, hovered = null, onlyEnd = false, maskV = 1;
   const hvBusy = () => Object.keys(HV).some(k => HV[k] !== (k === hoverL ? 1 : 0));
   const TAU = 0.42;                      // секунды: чем больше, тем тяжелее
@@ -76,7 +77,7 @@ if (reduce) {
     for (const sc of scenes) sc.style.transform = lean ? `rotateX(${lean.toFixed(2)}deg)` : "";
     if (Math.abs(target - cur) < .3) { cur = target; for (const sc of scenes) sc.style.transform = ""; }
     frame();
-    if (cur !== target || hvBusy() || maskV !== (onlyEnd ? 0 : 1)) requestAnimationFrame(tick); else { running = false; last = 0; }
+    if (cur !== target || hvBusy() || maskV !== (onlyEnd ? 0 : 1) || wtBusy) requestAnimationFrame(tick); else { running = false; last = 0; }
   }
   function kick() { if (!running) { running = true; requestAnimationFrame(tick); } }
 
@@ -133,6 +134,8 @@ if (reduce) {
     wts[L.la] += 1 - L.t; wts[L.lb] += L.t;
     for (const k in wts) wts[k] *= 1 - hvSum;
     for (const k in HV) wts[k] += HV[k] * (hvSum ? hvSum / (HV.c + HV.o + HV.v) : 0);
+    wtBusy = false;
+    for (const k in wts) { const d = wts[k] - WT[k]; if (Math.abs(d) < .004) WT[k] = wts[k]; else { WT[k] += d * .1; wtBusy = true; } wts[k] = WT[k]; }
     const kk = Math.min(1, lm / 1.1);                       // яркость: только прозрачность готовых слоёв, без перерисовки
     for (const k in wts) {
       const el = LG[k], o = wts[k] * (.6 + .4 * kk);
