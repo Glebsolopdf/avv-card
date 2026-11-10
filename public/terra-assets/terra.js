@@ -3,13 +3,14 @@ document.querySelectorAll("[data-buy]").forEach(a => a.href = "https://t.me/" + 
 document.querySelectorAll("[data-tg]").forEach(a => a.href = "https://t.me/" + BOT);
 
 /* лучи: у каждого свой случайный темп вспышек и сдвиг, чтобы они не мигали в унисон */
-document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (5 + Math.random() * 9).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 14).toFixed(1) + "s"); });
+document.querySelectorAll(".water i").forEach(r => { r.style.setProperty("--gd", (5 + Math.random() * 9).toFixed(1) + "s"); r.style.setProperty("--gl", (-Math.random() * 14).toFixed(1) + "s"); r.style.setProperty("--rf", (-34 + Math.random() * 68).toFixed(1) + "deg"); r.style.setProperty("--Af", (12 + Math.random() * 18).toFixed(1) + "deg"); });
 
+let introMs = 3600;   // сколько длится вступление; касание или клавиша обрывают его раньше
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!reduce) {
   history.scrollRestoration = "manual"; scrollTo(0, 0); document.documentElement.classList.add("js-lock");
   document.documentElement.style.overflow = "hidden";
-  setTimeout(() => { document.documentElement.style.overflow = ""; }, 6800);
+  setTimeout(() => { document.documentElement.style.overflow = ""; }, introMs);
 }
 if (reduce) {
   document.documentElement.classList.add("flat");
@@ -82,6 +83,7 @@ if (reduce) {
   function frame() {
     const vh = VH, pos = cur / vh;
     stage.classList.toggle("calm", pos > 7.25);
+    stage.classList.toggle("free", pos > .7);   // после заголовка лучи расходятся каждый в свою сторону
     if (onlyEnd && pos < 6.9) { onlyEnd = false; kick(); }   // вернулись к X20 свайпом назад: остановка 6.75 не меньше 6.75, поэтому порог с запасом (прыжок «К тарифам» стартует с 7.05)
     let lightMax = 0;
     for (const it of items) {
@@ -155,7 +157,7 @@ if (reduce) {
   /* лучи оживают на время прокрутки: сразу при загрузке (вступление), затем при каждом движении и ещё чуть-чуть после него */
   let movT = 0;
   const moving = ms => { stage.classList.add("moving"); clearTimeout(movT); movT = setTimeout(() => stage.classList.remove("moving"), ms); };
-  moving(7000);
+  moving(introMs + 300);
   addEventListener("scroll", () => moving(1400), { passive: true });
   stage.querySelectorAll(".cells li").forEach(li => {
     li.addEventListener("mouseenter", () => { if (li.style.pointerEvents !== "auto") return; hovered = li; hoverL = li.dataset.l; kick(); });
@@ -168,6 +170,14 @@ if (reduce) {
   /* постраничная прокрутка: один жест подводит к следующему объекту и проигрывает его анимацию */
   const STOPS = STOPS0;
   const t0 = performance.now();
+  /* пропуск вступления: касание, клик или клавиша сразу показывают заголовок и открывают прокрутку */
+  function skipIntro() {
+    if (performance.now() - t0 >= introMs) return;
+    introMs = 0; document.documentElement.classList.add("skip-intro"); document.documentElement.style.overflow = "";
+    down.classList.remove("first");
+  }
+  addEventListener("pointerdown", skipIntro, { passive: true });
+  addEventListener("keydown", skipIntro);
   let anim = false, blockUntil = 0, idleTimer = 0;
   const ease = t => t < .5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;   // медленный старт и мягкая остановка
   function goTo(pos) {
@@ -181,7 +191,7 @@ if (reduce) {
     })(st);
   }
   function stepBy(dir) {
-    if (anim || performance.now() - t0 < 6800) return;
+    if (anim || performance.now() - t0 < introMs) return;
     const pos = scrollY / VH;
     const next = dir > 0 ? STOPS.find(v => v > pos + .06) : [...STOPS].reverse().find(v => v < pos - .06);
     if (next !== undefined) goTo(next);
@@ -212,7 +222,7 @@ if (reduce) {
   addEventListener("scroll", () => {
     if (anim) return; clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
-      if (anim || performance.now() - t0 < 6800) return;
+      if (anim || performance.now() - t0 < introMs) return;
       const pos = scrollY / VH, near = STOPS.reduce((a, b) => Math.abs(b - pos) < Math.abs(a - pos) ? b : a);
       goTo(near);
     }, 320);
@@ -245,7 +255,7 @@ if (reduce) {
 
   /* стрелка внизу: показывается на первом экране, исчезает после начала прокрутки */
   const down = document.getElementById("down");
-  setTimeout(() => down.classList.remove("first"), 7500);
+  setTimeout(() => down.classList.remove("first"), introMs + 800);
   down.addEventListener("click", e => { e.preventDefault(); stepBy(1); });
   const hideDown = () => { const p = scrollY / VH; down.classList.toggle("show", scrollY < 20 || (p > 7.45 && p < 8.1)); };
   addEventListener("scroll", hideDown, { passive: true }); addEventListener("resize", hideDown);
@@ -254,7 +264,7 @@ if (reduce) {
   const veil = document.getElementById("veil");
   document.getElementById("jump").addEventListener("click", e => {
     e.preventDefault();
-    if (anim || performance.now() - t0 < 6800) return;
+    if (anim || performance.now() - t0 < introMs) return;
     const end = 7.7;                       // остановка с карточками тарифов
     if (scrollY / VH > end - .6) { goTo(end); return; }
     anim = true; stage.classList.add("dive"); veil.classList.add("on");
