@@ -84,7 +84,8 @@ if (reduce) {
   function frame() {
     const vh = VH, pos = cur / vh;
     stage.classList.toggle("calm", pos > 7.25);
-    stage.classList.toggle("free", pos > .7);   // после заголовка лучи расходятся каждый в свою сторону
+    stage.classList.toggle("free", pos > .7);
+    stage.classList.toggle("top", pos < .7);   // на заголовке лучи не замирают после вступления   // после заголовка лучи расходятся каждый в свою сторону
     if (onlyEnd && pos < 6.9) { onlyEnd = false; kick(); }   // вернулись к X20 свайпом назад: остановка 6.75 не меньше 6.75, поэтому порог с запасом (прыжок «К тарифам» стартует с 7.05)
     let lightMax = 0;
     for (const it of items) {
